@@ -119,4 +119,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->username = $username;
         return $this;
     }
+
+    /**
+     * @return ArrayCollection|PermissionGroups[] All permission groups of an user
+     */
+    public function getPermissionGroups(): ArrayCollection
+    {
+        return $this->permissionGroups;
+    }
 }

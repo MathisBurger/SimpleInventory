@@ -61,4 +61,12 @@ class PermissionGroups
         $this->groupColor = $groupColor;
         return $this;
     }
+
+    /**
+     * @return ArrayCollection|Table[] All tables of an permission group
+     */
+    public function getTables(): ArrayCollection
+    {
+        return $this->tables;
+    }
 }
