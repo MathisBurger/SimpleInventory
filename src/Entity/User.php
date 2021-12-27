@@ -21,7 +21,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private int $id;
 
     #[ORM\Column(type: 'json')]
-    private array $roles;
+    private array $roles = [];
 
     #[ORM\Column(type: 'string', length: 255)]
     private string $username;
@@ -29,11 +29,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', length: 255)]
     private string $password;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $token;
+
+    /**
+     * @return int|null The id of the user
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return array All roles of the user
+     */
     public function getRoles(): array
     {
         return $this->roles;
@@ -41,22 +50,62 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function eraseCredentials()
     {
-        $this->password = null;
+        // nothing implemented
     }
 
+    /**
+     * @return string The field the user uses to log in
+     */
     public function getUserIdentifier(): string
     {
         return $this->username;
     }
 
+    /**
+     * @return string|null The hashed password of the user
+     */
     public function getPassword(): ?string
     {
         return $this->password;
     }
 
+    /**
+     * Sets the new user password
+     *
+     * @param string $password The new hashed password for the user
+     */
     public function setPassword(string $password): self
     {
         $this->password = $password;
+        return $this;
+    }
+
+    /**
+     * @return string The token used for auth
+     */
+    public function getToken(): string {
+        return $this->token;
+    }
+
+    /**
+     * Sets a new user token for auth
+     *
+     * @param string $token The new user token
+     */
+    public function setToken(string $token): self
+    {
+        $this->token = $token;
+        return $this;
+    }
+
+    /**
+     * Sets the username of the user
+     *
+     * @param string $username The username of the user
+     */
+    public function setUsername(string $username): self
+    {
+        $this->username = $username;
         return $this;
     }
 }
