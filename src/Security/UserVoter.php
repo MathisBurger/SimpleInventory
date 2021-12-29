@@ -14,6 +14,7 @@ class UserVoter extends Voter
 {
     public const CREATE_USER = 'CREATE_USER';
     public const DELETE_USER = 'DELETE_USER';
+    public const VIEW_USERS = 'VIEW_USERS';
 
     private Security $security;
 
@@ -26,7 +27,8 @@ class UserVoter extends Voter
     {
         if (!in_array($attribute, [
             self::CREATE_USER,
-            self::DELETE_USER
+            self::DELETE_USER,
+            self::VIEW_USERS
         ])) {
             return false;
         }
@@ -47,6 +49,7 @@ class UserVoter extends Voter
 
         return match ($attribute) {
             self::CREATE_USER, self::DELETE_USER => $this->canUpdateUserOnHighLevel(),
+            self::VIEW_USERS => $this->userIsAllowedToViewUser(),
             default => false,
         };
     }
@@ -60,5 +63,15 @@ class UserVoter extends Voter
     {
         return $this->security->isGranted(User::ROLE_MANAGER)
             || $this->security->isGranted(User::ROLE_ADMIN);
+    }
+
+    /**
+     * Checks if the user is allowed to view other users
+     *
+     * @return bool If the user is allowed to view users
+     */
+    private function userIsAllowedToViewUser(): bool
+    {
+        return $this->security->isGranted(User::ROLE_USER);
     }
 }

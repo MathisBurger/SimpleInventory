@@ -72,4 +72,18 @@ class UserController extends DefaultResponsesWithAbstractController
             return $this->exceptionResponse($e->getMessage());
         }
     }
+
+    /**
+     * Gets all users in the system
+     */
+    #[Route('/api/user/allUsers', methods: Request::METHOD_GET)]
+    public function allUsers(): Response {
+        try {
+            return $this->json([
+                'users' => $this->userService->getAllUsers()
+            ]);
+        } catch (NotAuthorizedException $e) {
+            return $this->notAuthorizedResponse();
+        }
+    }
 }

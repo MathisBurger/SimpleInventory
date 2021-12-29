@@ -110,4 +110,18 @@ class UserService
         }
     }
 
+    /**
+     * Returns all users in the system if the user is authorized.
+     *
+     * @return array All users in the system
+     * @throws NotAuthorizedException If the user is not authorized
+     */
+    public function getAllUsers(): array
+    {
+        if (!$this->security->isGranted(UserVoter::VIEW_USERS)) {
+            throw new NotAuthorizedException('You are not authorized for this action');
+        }
+        return $this->userRepository->findAll();
+    }
+
 }
