@@ -7,6 +7,7 @@ use App\Entity\Table;
 use App\Entity\User;
 use App\Exception\GroupNotFoundException;
 use App\Exception\NotAuthorizedException;
+use App\Exception\UserNotFoundException;
 use App\Repository\PermissionGroupsRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -67,10 +68,7 @@ class UserService
      */
     public function createNewUser(string $username, string $password, array $permissionGroups): User
     {
-        if (
-            $this->security->isGranted(User::ROLE_MANAGER)
-            || $this->security->isGranted(User::ROLE_ADMIN)
-        ) {
+        if ($this->userHasElevatedRights()) {
             $usr = (new User())
                 ->setUsername($username);
             $usr->setPassword($this->hasher->hashPassword($usr, $password));
@@ -88,6 +86,37 @@ class UserService
         } else {
             throw new NotAuthorizedException('You are not authorized for this action');
         }
+    }
+
+    /**
+     * Deletes a user from the inventory system.
+     *
+     * @param int $userID The ID of the user that should be removed
+     * @throws NotAuthorizedException If the user is not authorized to delete a user
+     * @throws UserNotFoundException If the user that should be deleted does not exist
+     */
+    public function deleteUser(int $userID)
+    {
+        if ($this->userHasElevatedRights()) {
+            $user = $this->userRepository->findOneBy(['id' => $userID]);
+            if ($user === null) {
+                throw new UserNotFoundException('The user has not been found in the system');
+            }
+            $this->entityManager->remove($user);
+            $this->entityManager->flush();
+        } else {
+            throw new NotAuthorizedException('You are not authorized for this action');
+        }
+    }
+
+    /**
+     * Checks if the user that did a request has elevated rights
+     *
+     * @return bool If the user has elevated rights
+     */
+    private function userHasElevatedRights(): bool {
+        return $this->security->isGranted(User::ROLE_MANAGER)
+        || $this->security->isGranted(User::ROLE_ADMIN);
     }
 
 }

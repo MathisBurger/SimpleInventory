@@ -4,14 +4,14 @@ namespace App\Controller;
 
 use App\Exception\GroupNotFoundException;
 use App\Exception\NotAuthorizedException;
+use App\Exception\UserNotFoundException;
 use App\Service\UserService;
 use App\Validator\UserRequestValidator;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class UserController extends AbstractController
+class UserController extends DefaultResponsesWithAbstractController
 {
     private UserRequestValidator $validator;
     private UserService $userService;
@@ -29,10 +29,7 @@ class UserController extends AbstractController
     public function createUser(Request $request): Response
     {
         if (!$this->validator->validateCreateUserRequest($request)) {
-            return $this->json([
-                'message' => 'Your json request had the wrong shape',
-                'code' => 400
-            ], Response::HTTP_BAD_REQUEST);
+            return $this->invalidRequestResponse();
         }
         $requestContent = json_decode($request->getContent(), true);
 
@@ -47,7 +44,28 @@ class UserController extends AbstractController
                 'message' => 'One of the requested permission groups was not found on the server'
             ], Response::HTTP_BAD_REQUEST);
         } catch (NotAuthorizedException $e) {
-            return $this->redirect('/login');
+            return $this->notAuthorizedResponse();
+        }
+    }
+
+    /**
+     * Deletes a user from the inventory system.
+     */
+    #[Route('/api/user/deleteUser', methods: Request::METHOD_POST)]
+    public function deleteUser(Request $request): Response {
+
+        if (!$this->validator->validateDeleteUserRequest($request)) {
+            return $this->invalidRequestResponse();
+        }
+        $requestContent = json_decode($request->getContent(), true);
+        try {
+            $this->userService->deleteUser($requestContent['userID']);
+        } catch (NotAuthorizedException $e) {
+            return $this->notAuthorizedResponse();
+        } catch (UserNotFoundException $e) {
+            return $this->json([
+                'message' => 'The requested user cannot be found on the server'
+            ], Response::HTTP_BAD_REQUEST);
         }
     }
 }

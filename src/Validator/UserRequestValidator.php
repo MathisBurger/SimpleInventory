@@ -23,4 +23,15 @@ class UserRequestValidator extends ValidationHandler
         return $this->validateRequest($request, $constraints);
     }
 
+    /**
+     * Validates the request for deleteUser endpoint.
+     */
+    public function validateDeleteUserRequest(Request $request): bool
+    {
+        $constraints = new Collection([
+            'userID' => new Required(new NotBlank())
+        ]);
+        return $this->validateRequest($request, $constraints);
+    }
+
 }
