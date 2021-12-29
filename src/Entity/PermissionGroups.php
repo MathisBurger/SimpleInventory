@@ -76,4 +76,11 @@ class PermissionGroups
         $user->addPermissionGroup($this);
         return $this;
     }
+
+    public function removeUser(User $user): self
+    {
+        $this->users->removeElement($user);
+        $user->removePermissionGroup($this);
+        return $this;
+    }
 }

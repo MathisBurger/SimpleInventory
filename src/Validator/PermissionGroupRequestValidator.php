@@ -32,4 +32,28 @@ class PermissionGroupRequestValidator extends ValidationHandler
         ]);
         return $this->validateRequest($request, $constraints);
     }
+
+    /**
+     * Validates the addUser endpoint.
+     */
+    public function validateAddUserRequest(Request $request): bool
+    {
+        $constraints = new Collection([
+            'groupID' => new Required(new NotBlank()),
+            'userID' => new Required(new NotBlank())
+        ]);
+        return $this->validateRequest($request, $constraints);
+    }
+
+    /**
+     * Validates the removeUser endpoint.
+     */
+    public function validateRemoveUserRequest(Request $request): bool
+    {
+        $constraints = new Collection([
+            'groupID' => new Required(new NotBlank()),
+            'userID' => new Required(new NotBlank())
+        ]);
+        return $this->validateRequest($request, $constraints);
+    }
 }

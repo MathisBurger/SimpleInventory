@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Exception\AlreadyContainsException;
 use App\Exception\GroupNotFoundException;
 use App\Exception\NotAuthorizedException;
+use App\Exception\UserNotFoundException;
 use App\Service\PermissionGroupService;
 use App\Validator\PermissionGroupRequestValidator;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,7 +32,7 @@ class PermissionGroupController extends DefaultResponsesWithAbstractController
      * Creates a new permission group in the inventory system
      */
     #[Route('/api/permission-group/createGroup', methods: Request::METHOD_POST)]
-    public function createPermissionGroup(Request $request): Response
+    public function createGroup(Request $request): Response
     {
         if (!$this->validator->validateCreateGroupRequest($request)) {
             return $this->invalidRequestResponse();
@@ -51,7 +53,7 @@ class PermissionGroupController extends DefaultResponsesWithAbstractController
      * Deletes the permission group from the server
      */
     #[Route('/api/permission-group/deleteGroup', methods: Request::METHOD_POST)]
-    public function deletePermissionGroup(Request $request): Response
+    public function deleteGroup(Request $request): Response
     {
         if (!$this->validator->validateDeleteGroupRequest($request)) {
             return $this->notAuthorizedResponse();
@@ -64,12 +66,54 @@ class PermissionGroupController extends DefaultResponsesWithAbstractController
             ]);
         } catch (GroupNotFoundException $e) {
             // Permission group not found on the server
-            return $this->elementNotFoundResponse('permission group');
+            return $this->exceptionResponse($e->getMessage());
         } catch (NotAuthorizedException $e) {
             return $this->notAuthorizedResponse();
         }
     }
 
+    /**
+     * Adds a user to a permission group.
+     */
+    #[Route('/api/permission-group/addUser', methods: Request::METHOD_POST)]
+    public function addUser(Request $request): Response
+    {
+        if (!$this->validator->validateAddUserRequest($request)) {
+            return $this->invalidRequestResponse();
+        }
+        $requestContent = json_decode($request->getContent(), true);
+        try {
+            $this->permissionGroupService->addUserToPermissionGroup($requestContent['groupID'], $requestContent['userID']);
+            return $this->json([
+                'message' => 'User successfully added to permission group'
+            ]);
+        } catch (AlreadyContainsException | UserNotFoundException $e) {
+            return $this->exceptionResponse($e->getMessage());
+        } catch (NotAuthorizedException $e) {
+            return $this->notAuthorizedResponse();
+        }
+    }
 
+    /**
+     * Removes a user from a permission group
+     */
+    #[Route('/api/permission-group/removeUser', methods: Request::METHOD_POST)]
+    public function removeUser(Request $request): Response
+    {
+        if (!$this->validator->validateRemoveUserRequest($request)) {
+            return $this->invalidRequestResponse();
+        }
+        $requestContent = json_decode($request->getContent(), true);
+        try {
+            $this->permissionGroupService->removeUserFromPermissionGroup($requestContent['groupID'], $requestContent['userID']);
+            return $this->json([
+                'message' => 'Successfully removed user from permission group'
+            ]);
+        } catch (NotAuthorizedException $e) {
+            return $this->notAuthorizedResponse();
+        } catch (UserNotFoundException $e) {
+            return $this->exceptionResponse($e->getMessage());
+        }
+    }
 
 }

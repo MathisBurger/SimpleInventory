@@ -44,7 +44,7 @@ class UserController extends DefaultResponsesWithAbstractController
             ]);
         } catch (GroupNotFoundException $e) {
             // Permission group was not found in the database
-            return $this->elementNotFoundResponse('permission group');
+            return $this->exceptionResponse($e->getMessage());
         } catch (NotAuthorizedException $e) {
             return $this->notAuthorizedResponse();
         }
@@ -69,7 +69,7 @@ class UserController extends DefaultResponsesWithAbstractController
             return $this->notAuthorizedResponse();
         } catch (UserNotFoundException $e) {
             // Permission group was not found in the database
-            return $this->elementNotFoundResponse('permission group');
+            return $this->exceptionResponse($e->getMessage());
         }
     }
 }

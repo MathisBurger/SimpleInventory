@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class DefaultResponsesWithAbstractController extends AbstractController
@@ -35,13 +34,13 @@ class DefaultResponsesWithAbstractController extends AbstractController
     /**
      * Creates a default response for elements that are not existing on the server
      *
-     * @param string $element The name of the element
+     * @param string $message The name of the element
      * @return Response The default response
      */
-    protected function elementNotFoundResponse(string $element): Response
+    protected function exceptionResponse(string $message): Response
     {
         return $this->json([
-            'message' => 'The requested ' . $element . ' was not found on this server'
+            'message' => $message
         ], Response::HTTP_BAD_REQUEST);
     }
 }

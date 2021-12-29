@@ -15,6 +15,8 @@ class PermissionGroupVoter extends Voter
 {
     public const CREATE_GROUP = 'CREATE_GROUP';
     public const DELETE_GROUP = 'DELETE_GROUP';
+    public const ADD_USER = 'ADD_USER';
+    public const REMOVE_USER = 'REMOVE_USER';
 
     private Security $security;
 
@@ -27,7 +29,9 @@ class PermissionGroupVoter extends Voter
     {
         if (!in_array($attribute, [
             self::CREATE_GROUP,
-            self::DELETE_GROUP
+            self::DELETE_GROUP,
+            self::ADD_USER,
+            self::REMOVE_USER
         ])) {
             return false;
         }
@@ -47,7 +51,7 @@ class PermissionGroupVoter extends Voter
         }
 
         return match ($attribute) {
-            self::CREATE_GROUP, self::DELETE_GROUP => $this->canCreateOrDeleteGroup(),
+            self::CREATE_GROUP, self::DELETE_GROUP, self::ADD_USER, self::REMOVE_USER => $this->canCreateOrDeleteGroup(),
             default => false,
         };
     }
