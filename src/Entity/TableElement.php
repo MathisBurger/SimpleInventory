@@ -35,4 +35,10 @@ class TableElement
 
         return $this;
     }
+
+    public function setParentTable(?Table $table): self
+    {
+        $this->parentTable = $table;
+        return $this;
+    }
 }
