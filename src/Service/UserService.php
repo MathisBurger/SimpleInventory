@@ -10,6 +10,7 @@ use App\Exception\NotAuthorizedException;
 use App\Repository\PermissionGroupsRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Security;
 
 class UserService
@@ -19,17 +20,20 @@ class UserService
     private PermissionGroupsRepository $permissionGroupsRepository;
     private Security $security;
     private EntityManagerInterface $entityManager;
+    private UserPasswordHasherInterface $hasher;
 
     public function __construct(
         UserRepository $userRepository,
         Security $security,
         PermissionGroupsRepository $permissionGroupsRepository,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        UserPasswordHasherInterface $hasher
     ) {
         $this->userRepository = $userRepository;
         $this->security = $security;
         $this->permissionGroupsRepository = $permissionGroupsRepository;
         $this->entityManager = $entityManager;
+        $this->hasher = $hasher;
     }
 
     /**
@@ -68,8 +72,8 @@ class UserService
             || $this->security->isGranted(User::ROLE_ADMIN)
         ) {
             $usr = (new User())
-                ->setUsername($username)
-                ->setPassword($password);
+                ->setUsername($username);
+            $usr->setPassword($this->hasher->hashPassword($usr, $password));
             foreach ($permissionGroups as $permissionGroupId) {
                 $permGroup = $this->permissionGroupsRepository->findOneBy(['id' => $permissionGroupId]);
                 if ($permGroup === null) {
@@ -80,6 +84,7 @@ class UserService
             }
             $this->entityManager->persist($usr);
             $this->entityManager->flush();
+            return $usr;
         } else {
             throw new NotAuthorizedException('You are not authorized for this action');
         }
