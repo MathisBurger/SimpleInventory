@@ -11,6 +11,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * REST Controller for all user actions
+ */
 class UserController extends DefaultResponsesWithAbstractController
 {
     private UserRequestValidator $validator;
@@ -40,9 +43,8 @@ class UserController extends DefaultResponsesWithAbstractController
                'user' => $user
             ]);
         } catch (GroupNotFoundException $e) {
-            return $this->json([
-                'message' => 'One of the requested permission groups was not found on the server'
-            ], Response::HTTP_BAD_REQUEST);
+            // Permission group was not found in the database
+            return $this->elementNotFoundResponse('permission group');
         } catch (NotAuthorizedException $e) {
             return $this->notAuthorizedResponse();
         }
@@ -66,9 +68,8 @@ class UserController extends DefaultResponsesWithAbstractController
         } catch (NotAuthorizedException $e) {
             return $this->notAuthorizedResponse();
         } catch (UserNotFoundException $e) {
-            return $this->json([
-                'message' => 'The requested user cannot be found on the server'
-            ], Response::HTTP_BAD_REQUEST);
+            // Permission group was not found in the database
+            return $this->elementNotFoundResponse('permission group');
         }
     }
 }

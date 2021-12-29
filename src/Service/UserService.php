@@ -10,6 +10,7 @@ use App\Exception\NotAuthorizedException;
 use App\Exception\UserNotFoundException;
 use App\Repository\PermissionGroupsRepository;
 use App\Repository\UserRepository;
+use App\Security\UserVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\Security;
@@ -68,7 +69,7 @@ class UserService
      */
     public function createNewUser(string $username, string $password, array $permissionGroups): User
     {
-        if ($this->userHasElevatedRights()) {
+        if ($this->security->isGranted(UserVoter::CREATE_USER)) {
             $usr = (new User())
                 ->setUsername($username);
             $usr->setPassword($this->hasher->hashPassword($usr, $password));
@@ -97,7 +98,7 @@ class UserService
      */
     public function deleteUser(int $userID)
     {
-        if ($this->userHasElevatedRights()) {
+        if ($this->security->isGranted(UserVoter::DELETE_USER)) {
             $user = $this->userRepository->findOneBy(['id' => $userID]);
             if ($user === null) {
                 throw new UserNotFoundException('The user has not been found in the system');
@@ -107,16 +108,6 @@ class UserService
         } else {
             throw new NotAuthorizedException('You are not authorized for this action');
         }
-    }
-
-    /**
-     * Checks if the user that did a request has elevated rights
-     *
-     * @return bool If the user has elevated rights
-     */
-    private function userHasElevatedRights(): bool {
-        return $this->security->isGranted(User::ROLE_MANAGER)
-        || $this->security->isGranted(User::ROLE_ADMIN);
     }
 
 }
