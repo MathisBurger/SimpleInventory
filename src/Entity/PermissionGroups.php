@@ -69,4 +69,11 @@ class PermissionGroups
     {
         return $this->tables;
     }
+
+    public function addUser(User $user): self
+    {
+        $this->users->add($user);
+        $user->addPermissionGroup($this);
+        return $this;
+    }
 }

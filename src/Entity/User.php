@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Repository\PermissionGroupsRepository;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -126,5 +127,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getPermissionGroups(): ArrayCollection
     {
         return $this->permissionGroups;
+    }
+
+    public function addPermissionGroup(PermissionGroups $group): self
+    {
+        $this->permissionGroups->add($group);
+        return $this;
     }
 }
