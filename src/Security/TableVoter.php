@@ -4,6 +4,7 @@ namespace App\Security;
 
 use App\Entity\Table;
 use App\Entity\User;
+use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Security;
@@ -12,6 +13,9 @@ class TableVoter extends Voter
 {
     public const CREATE_TABLE = 'CREATE_TABLE';
     public const DELETE_TABLE = 'DELETE_TABLE';
+    public const ADD_ELEMENT = 'ADD_ELEMENT';
+    public const REMOVE_ELEMENT = 'REMOVE_ELEMENT';
+    public const UPDATE_ELEMENT = 'UPDATE_ELEMENT';
 
     private Security $security;
 
@@ -24,7 +28,10 @@ class TableVoter extends Voter
     {
         if (!in_array($attribute, [
             self::CREATE_TABLE,
-            self::DELETE_TABLE
+            self::DELETE_TABLE,
+            self::ADD_ELEMENT,
+            self::REMOVE_ELEMENT,
+            self::UPDATE_ELEMENT
         ])) {
             return false;
         }
@@ -43,8 +50,12 @@ class TableVoter extends Voter
             return false;
         }
 
+        /* @var $table Table */
+        $table = $subject;
+
         return match ($attribute) {
             self::CREATE_TABLE, self::DELETE_TABLE => $this->canCreateDeleteTable(),
+            self::ADD_ELEMENT, self::REMOVE_ELEMENT, self::UPDATE_ELEMENT => $this->canAddElement($loggedInUser, $table),
             default => false,
         };
     }
@@ -58,5 +69,26 @@ class TableVoter extends Voter
     {
         return $this->security->isGranted(User::ROLE_MANAGER)
             || $this->security->isGranted(User::ROLE_ADMIN);
+    }
+
+    /**
+     * Checks if a user is allowed to add elements to a table.
+     *
+     * @param User $user The user that should be checked
+     * @param Table $table The given table
+     * @return bool If the user can add elements to permission group
+     */
+    #[Pure] private function canAddElement(User $user, Table $table): bool
+    {
+        $exists = false;
+        foreach ($user->getPermissionGroups() as $permissionGroup) {
+            foreach ($permissionGroup->getTables() as $permTable) {
+                if ($permTable->getId() === $table->getId()) {
+                    $exists = true;
+                    break;
+                }
+            }
+        }
+        return $exists;
     }
 }

@@ -41,4 +41,9 @@ class TableElement
         $this->parentTable = $table;
         return $this;
     }
+
+    public function getParentTable(): ?Table
+    {
+        return $this->parentTable;
+    }
 }

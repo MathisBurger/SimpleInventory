@@ -32,4 +32,39 @@ class TableRequestValidator extends ValidationHandler
         return $this->validateRequest($request, $constraints);
     }
 
+    /**
+     * Validates the addElement endpoint.
+     */
+    public function validateAddElementRequest(Request $request): bool
+    {
+        $constraints = new Collection([
+            'tableID' => new Required(new NotBlank()),
+            'content' => new Required(new NotBlank())
+        ]);
+        return $this->validateRequest($request, $constraints);
+    }
+
+    /**
+     * Validates the removeElement endpoint.
+     */
+    public function validateRemoveElementRequest(Request $request): bool
+    {
+        $constraints = new Collection([
+            'elementID' => new Required(new NotBlank()),
+            'content' => new Required(new NotBlank())
+        ]);
+        return $this->validateRequest($request, $constraints);
+    }
+
+    /**
+     * Validates the updateElement endpoint.
+     */
+    public function validateUpdateElementRequest(Request $request): bool
+    {
+        $constraints = new Collection([
+            'elementID' => new Required(new NotBlank()),
+            'content' => new Required(new NotBlank())
+        ]);
+        return $this->validateRequest($request, $constraints);
+    }
 }

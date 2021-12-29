@@ -64,4 +64,73 @@ class TableController extends DefaultResponsesWithAbstractController
             return $this->exceptionResponse($e->getMessage());
         }
     }
+
+    /**
+     * Adds a new table element to the new table
+     */
+    #[Route('/api/table/addElement', methods: Request::METHOD_POST)]
+    public function addElement(Request $request): Response
+    {
+        if (!$this->validator->validateAddElementRequest($request)) {
+            return $this->invalidRequestResponse();
+        }
+        $requestContent = json_decode($request->getContent(), true);
+        try {
+            $table = $this->tableService->addElement($requestContent['tableID'], $requestContent['content']);
+            return $this->json([
+                'message' => 'successfully added table element',
+                'table' => $table
+            ]);
+        } catch (NotAuthorizedException $e) {
+            return $this->notAuthorizedResponse();
+        } catch (TableNotFoundException $e) {
+            return $this->exceptionResponse($e->getMessage());
+        }
+    }
+
+    /**
+     * Removes an element from a table
+     */
+    #[Route('/api/table/removeElement', methods: Request::METHOD_POST)]
+    public function removeElement(Request $request): Response
+    {
+        if (!$this->validator->validateRemoveElementRequest($request)) {
+            return $this->invalidRequestResponse();
+        }
+        $requestContent = json_decode($request->getContent(), true);
+        try {
+            $table = $this->tableService->removeElement($requestContent['elementID']);
+            return $this->json([
+                'message' => 'Successfully removed table element',
+                'table' => $table
+            ]);
+        } catch (NotAuthorizedException $e) {
+            return $this->notAuthorizedResponse();
+        } catch (TableNotFoundException $e) {
+            return $this->exceptionResponse($e->getMessage());
+        }
+    }
+
+    /**
+     * Updates a table element in a table
+     */
+    #[Route('/api/table/updateElement', methods: Request::METHOD_POST)]
+    public function updateElement(Request $request): Response
+    {
+        if (!$this->validator->validateUpdateElementRequest($request)) {
+            return $this->invalidRequestResponse();
+        }
+        $requestContent = json_decode($request->getContent(), true);
+        try {
+            $table = $this->tableService->updateElement($requestContent['elementID'], $requestContent['content']);
+            return $this->json([
+                'message' => 'successfully updated table element',
+                'table' => $table
+            ]);
+        } catch (NotAuthorizedException $e) {
+            return $this->notAuthorizedResponse();
+        } catch (TableNotFoundException $e) {
+            return $this->exceptionResponse($e->getMessage());
+        }
+    }
 }
