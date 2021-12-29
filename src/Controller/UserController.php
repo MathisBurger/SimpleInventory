@@ -60,6 +60,9 @@ class UserController extends DefaultResponsesWithAbstractController
         $requestContent = json_decode($request->getContent(), true);
         try {
             $this->userService->deleteUser($requestContent['userID']);
+            return $this->json([
+                'message' => 'Successfully removed user from system'
+            ]);
         } catch (NotAuthorizedException $e) {
             return $this->notAuthorizedResponse();
         } catch (UserNotFoundException $e) {
