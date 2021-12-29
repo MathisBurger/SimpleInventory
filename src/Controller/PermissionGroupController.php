@@ -116,4 +116,48 @@ class PermissionGroupController extends DefaultResponsesWithAbstractController
         }
     }
 
+    /**
+     * Adds a table to a permission group
+     */
+    #[Route('/api/permission-group/addTable', methods: Request::METHOD_POST)]
+    public function addTable(Request $request): Response
+    {
+        if (!$this->validator->validateAddTableRequest($request)) {
+            return $this->invalidRequestResponse();
+        }
+        $requestContent = json_decode($request->getContent(), true);
+        try {
+            $this->permissionGroupService->addTableToPermissionGroup($requestContent['groupID'], $requestContent['tableID']);
+            return $this->json([
+                'message' => 'Successfully added table to permission group'
+            ]);
+        } catch (GroupNotFoundException $e) {
+            return $this->exceptionResponse($e->getMessage());
+        } catch (NotAuthorizedException $e) {
+            return $this->notAuthorizedResponse();
+        }
+    }
+
+    /**
+     * Removes a table from a permission group
+     */
+    #[Route('/api/permission-group/removeTable', methods: Request::METHOD_POST)]
+    public function removeTable(Request $request): Response
+    {
+        if (!$this->validator->validateRemoveTableRequest($request)) {
+            return $this->invalidRequestResponse();
+        }
+        $requestContent = json_decode($request->getContent(), true);
+        try {
+            $this->permissionGroupService->removeTableFromPermissionGroup($requestContent['groupID'], $requestContent['tableID']);
+            return $this->json([
+              'message' => 'Successfully removed table from permission group'
+            ]);
+        } catch (GroupNotFoundException $e) {
+            return $this->exceptionResponse($e->getMessage());
+        } catch (NotAuthorizedException $e) {
+            return $this->notAuthorizedResponse();
+        }
+    }
+
 }

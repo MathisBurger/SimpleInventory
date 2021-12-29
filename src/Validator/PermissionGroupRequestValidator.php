@@ -56,4 +56,25 @@ class PermissionGroupRequestValidator extends ValidationHandler
         ]);
         return $this->validateRequest($request, $constraints);
     }
+
+    /**
+     * Validates the addTable endpoint.
+     */
+    public function validateAddTableRequest(Request $request): bool
+    {
+        $constraints = new Collection([
+            'groupID' => new Required(new NotBlank()),
+            'tableID' => new Required(new NotBlank())
+        ]);
+        return $this->validateRequest($request, $constraints);
+    }
+
+    public function validateRemoveTableRequest(Request $request): bool
+    {
+        $constraints = new Collection([
+            'groupID' => new Required(new NotBlank()),
+            'tableID' => new Required(new NotBlank())
+        ]);
+        return $this->validateRequest($request, $constraints);
+    }
 }

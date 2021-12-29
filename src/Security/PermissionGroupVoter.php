@@ -17,6 +17,8 @@ class PermissionGroupVoter extends Voter
     public const DELETE_GROUP = 'DELETE_GROUP';
     public const ADD_USER = 'ADD_USER';
     public const REMOVE_USER = 'REMOVE_USER';
+    public const ADD_TABLE = 'ADD_TABLE';
+    public const REMOVE_TABLE = 'REMOVE_TABLE';
 
     private Security $security;
 
@@ -31,7 +33,9 @@ class PermissionGroupVoter extends Voter
             self::CREATE_GROUP,
             self::DELETE_GROUP,
             self::ADD_USER,
-            self::REMOVE_USER
+            self::REMOVE_USER,
+            self::ADD_TABLE,
+            self::REMOVE_TABLE
         ])) {
             return false;
         }
@@ -51,7 +55,12 @@ class PermissionGroupVoter extends Voter
         }
 
         return match ($attribute) {
-            self::CREATE_GROUP, self::DELETE_GROUP, self::ADD_USER, self::REMOVE_USER => $this->canCreateOrDeleteGroup(),
+            self::CREATE_GROUP,
+            self::DELETE_GROUP,
+            self::ADD_USER,
+            self::REMOVE_USER,
+            self::ADD_TABLE,
+            self::REMOVE_TABLE => $this->canCreateOrDeleteGroup(),
             default => false,
         };
     }

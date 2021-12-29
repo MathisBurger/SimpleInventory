@@ -83,4 +83,18 @@ class PermissionGroups
         $user->removePermissionGroup($this);
         return $this;
     }
+
+    public function addTable(Table $table): self
+    {
+        $this->tables->add($table);
+        $table->addPermissionGroup($this);
+        return $this;
+    }
+
+    public function removeTable(Table $table): self
+    {
+        $this->tables->removeElement($table);
+        $table->removePermissionGroup($this);
+        return $this;
+    }
 }

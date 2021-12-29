@@ -8,6 +8,7 @@ use App\Exception\GroupNotFoundException;
 use App\Exception\NotAuthorizedException;
 use App\Exception\UserNotFoundException;
 use App\Repository\PermissionGroupsRepository;
+use App\Repository\TableRepository;
 use App\Repository\UserRepository;
 use App\Security\PermissionGroupVoter;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,17 +20,20 @@ class PermissionGroupService
     private EntityManagerInterface $entityManager;
     private PermissionGroupsRepository $permissionGroupsRepository;
     private UserRepository $userRepository;
+    private TableRepository $tableRepository;
 
     public function __construct(
         Security $security,
         EntityManagerInterface $entityManager,
         PermissionGroupsRepository $permissionGroupsRepository,
         UserRepository $userRepository,
+        TableRepository $tableRepository
     ) {
         $this->security = $security;
         $this->entityManager = $entityManager;
         $this->permissionGroupsRepository = $permissionGroupsRepository;
         $this->userRepository = $userRepository;
+        $this->tableRepository = $tableRepository;
     }
 
     /**
@@ -128,6 +132,54 @@ class PermissionGroupService
         $group->removeUser($user);
         $this->entityManager->persist($group);
         $this->entityManager->persist($user);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * Adds a table to a permission group.
+     *
+     * @param int $groupID The ID of the group
+     * @param int $tableID The ID of the table
+     * @throws GroupNotFoundException If the table or group does not exist
+     * @throws NotAuthorizedException if the user is not authorized
+     */
+    public function addTableToPermissionGroup(int $groupID, int $tableID)
+    {
+        if (!$this->security->isGranted(PermissionGroupVoter::ADD_TABLE)) {
+            throw new NotAuthorizedException('You are not authorized for this action');
+        }
+        $group = $this->permissionGroupsRepository->findOneBy(['id' => $groupID]);
+        $table = $this->tableRepository->findOneBy(['id' => $tableID]);
+        if ($table === null || $group === null) {
+            throw new GroupNotFoundException('The group or table does not exist');
+        }
+        $group->addTable($table);
+        $this->entityManager->persist($group);
+        $this->entityManager->persist($table);
+        $this->entityManager->flush();
+    }
+
+    /**
+     * Removes a table from a permission group.
+     *
+     * @param int $groupID The ID of the group
+     * @param int $tableID The ID of the table
+     * @throws GroupNotFoundException If the table or group does not exist
+     * @throws NotAuthorizedException if the user is not authorized
+     */
+    public function removeTableFromPermissionGroup(int $groupID, int $tableID)
+    {
+        if (!$this->security->isGranted(PermissionGroupVoter::REMOVE_TABLE)) {
+            throw new NotAuthorizedException('You are not authorized for this action');
+        }
+        $group = $this->permissionGroupsRepository->findOneBy(['id' => $groupID]);
+        $table = $this->tableRepository->findOneBy(['id' => $tableID]);
+        if ($table === null || $group === null) {
+            throw new GroupNotFoundException('The group or table does not exist');
+        }
+        $group->removeTable($table);
+        $this->entityManager->persist($group);
+        $this->entityManager->persist($table);
         $this->entityManager->flush();
     }
 
