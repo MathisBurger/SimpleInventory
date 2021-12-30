@@ -2,6 +2,7 @@
   <div>
     <Header />
     <Navbar />
+    <router-view></router-view>
   </div>
 </template>
 

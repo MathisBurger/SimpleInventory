@@ -3,11 +3,12 @@ import App from './App.vue'
 import vuetify from "./plugins/vuetify";
 import stores from "./services/stores";
 import VueRouter from "vue-router";
-import {getRoutesAsRouteConfig} from "./Routes";
 import 'vuetify/dist/vuetify.min.css';
+import routes from "./Routes";
 
 const router = new VueRouter({
-    routes: getRoutesAsRouteConfig()
+    routes: routes,
+    mode: 'history'
 })
 
 new Vue({
