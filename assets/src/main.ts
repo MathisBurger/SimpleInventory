@@ -4,6 +4,7 @@ import vuetify from "./plugins/vuetify";
 import stores from "./services/stores";
 import VueRouter from "vue-router";
 import {getRoutesAsRouteConfig} from "./Routes";
+import 'vuetify/dist/vuetify.min.css';
 
 const router = new VueRouter({
     routes: getRoutesAsRouteConfig()
