@@ -18,8 +18,6 @@ class IndexController extends AbstractController
     #[Route('/', methods: [Request::METHOD_GET])]
     public function index(): Response
     {
-        return $this->json([
-            'message' => 'this is an placeholder message'
-        ], Response::HTTP_OK);
+       return $this->render('base.html.twig');
     }
 }
