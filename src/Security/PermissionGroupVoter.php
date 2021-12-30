@@ -19,6 +19,7 @@ class PermissionGroupVoter extends Voter
     public const REMOVE_USER = 'REMOVE_USER';
     public const ADD_TABLE = 'ADD_TABLE';
     public const REMOVE_TABLE = 'REMOVE_TABLE';
+    public const VIEW_GROUPS = 'VIEW_GROUPS';
 
     private Security $security;
 
@@ -35,7 +36,8 @@ class PermissionGroupVoter extends Voter
             self::ADD_USER,
             self::REMOVE_USER,
             self::ADD_TABLE,
-            self::REMOVE_TABLE
+            self::REMOVE_TABLE,
+            self::VIEW_GROUPS
         ])) {
             return false;
         }
@@ -61,6 +63,7 @@ class PermissionGroupVoter extends Voter
             self::REMOVE_USER,
             self::ADD_TABLE,
             self::REMOVE_TABLE => $this->canCreateOrDeleteGroup(),
+            self::VIEW_GROUPS => $this->security->isGranted(User::ROLE_USER),
             default => false,
         };
     }

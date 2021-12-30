@@ -160,4 +160,19 @@ class PermissionGroupController extends DefaultResponsesWithAbstractController
         }
     }
 
+    /**
+     * Fetches all permission groups in the system.
+     */
+    #[Route('/api/permission-group/allGroups', methods: Request::METHOD_GET)]
+    public function allGroups(): Response
+    {
+        try {
+            return $this->json([
+                'groups' => $this->permissionGroupService->getAllGroups()
+            ]);
+        } catch (NotAuthorizedException $e) {
+            return $this->notAuthorizedResponse();
+        }
+    }
+
 }

@@ -11,6 +11,7 @@ use App\Repository\PermissionGroupsRepository;
 use App\Repository\TableRepository;
 use App\Repository\UserRepository;
 use App\Security\PermissionGroupVoter;
+use App\Security\UserVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
 
@@ -181,6 +182,20 @@ class PermissionGroupService
         $this->entityManager->persist($group);
         $this->entityManager->persist($table);
         $this->entityManager->flush();
+    }
+
+    /**
+     * All permission groups in the system.
+     *
+     * @return array All permission groups in the system
+     * @throws NotAuthorizedException If the user is not authorized
+     */
+    public function getAllGroups(): array
+    {
+        if (!$this->security->isGranted(PermissionGroupVoter::VIEW_GROUPS)) {
+            throw new NotAuthorizedException('You are not authorized for this action');
+        }
+        return $this->permissionGroupsRepository->findAll();
     }
 
 }
