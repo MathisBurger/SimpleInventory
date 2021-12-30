@@ -5,6 +5,7 @@ Encore
     .setPublicPath('/build')
 
     .enableVueLoader()
+    .enableTypeScriptLoader()
 
     .addEntry('app', './assets/src/main.ts')
 
