@@ -1,0 +1,89 @@
+<?php
+
+namespace App\Controller;
+
+use App\Exception\GroupNotFoundException;
+use App\Exception\NotAuthorizedException;
+use App\Exception\UserNotFoundException;
+use App\Service\UserService;
+use App\Validator\UserRequestValidator;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+/**
+ * REST Controller for all user actions
+ */
+class UserController extends DefaultResponsesWithAbstractController
+{
+    private UserRequestValidator $validator;
+    private UserService $userService;
+
+    public function __construct(UserRequestValidator $userRequestValidator, UserService $userService)
+    {
+        $this->validator = $userRequestValidator;
+        $this->userService = $userService;
+    }
+
+    /**
+     * Creates a new user in the inventory system.
+     */
+    #[Route('/api/user/createUser', methods: Request::METHOD_POST)]
+    public function createUser(Request $request): Response
+    {
+        if (!$this->validator->validateCreateUserRequest($request)) {
+            return $this->invalidRequestResponse();
+        }
+        $requestContent = json_decode($request->getContent(), true);
+
+        try {
+            $user = $this->userService->createNewUser($requestContent['username'], $requestContent['password'], $requestContent['permissionGroups']);
+            return $this->json([
+               'message' => 'User created successfully',
+               'user' => $user
+            ]);
+        } catch (GroupNotFoundException $e) {
+            // Permission group was not found in the database
+            return $this->exceptionResponse($e->getMessage());
+        } catch (NotAuthorizedException $e) {
+            return $this->notAuthorizedResponse();
+        }
+    }
+
+    /**
+     * Deletes a user from the inventory system.
+     */
+    #[Route('/api/user/deleteUser', methods: Request::METHOD_POST)]
+    public function deleteUser(Request $request): Response {
+
+        if (!$this->validator->validateDeleteUserRequest($request)) {
+            return $this->invalidRequestResponse();
+        }
+        $requestContent = json_decode($request->getContent(), true);
+        try {
+            $this->userService->deleteUser($requestContent['userID']);
+            return $this->json([
+                'message' => 'Successfully removed user from system'
+            ]);
+        } catch (NotAuthorizedException $e) {
+            return $this->notAuthorizedResponse();
+        } catch (UserNotFoundException $e) {
+            // Permission group was not found in the database
+            return $this->exceptionResponse($e->getMessage());
+        }
+    }
+
+    /**
+     * Gets all users in the system
+     */
+    #[Route('/api/user/allUsers', methods: Request::METHOD_GET)]
+    public function allUsers(): Response {
+        try {
+            return $this->json([
+                'users' => $this->userService->getAllUsers()
+            ]);
+        } catch (NotAuthorizedException $e) {
+            return $this->notAuthorizedResponse();
+        }
+    }
+}

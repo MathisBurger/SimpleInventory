@@ -2,8 +2,12 @@
 
 namespace App\Entity;
 
+use App\Repository\PermissionGroupsRepository;
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -32,6 +36,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private ?string $token;
 
+    #[ORM\ManyToMany(targetEntity: PermissionGroups::class, inversedBy: 'users')]
+    private Collection $permissionGroups;
+
+    #[Pure] public function __construct()
+    {
+        $this->permissionGroups = new ArrayCollection();
+    }
+
     /**
      * @return int|null The id of the user
      */
@@ -45,7 +57,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getRoles(): array
     {
-        return $this->roles;
+        $roles = $this->roles;
+        if (!in_array(self::ROLE_USER, $roles)) {
+            $roles[] = self::ROLE_USER;
+        }
+        return $roles;
     }
 
     public function eraseCredentials()
@@ -106,6 +122,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUsername(string $username): self
     {
         $this->username = $username;
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection|PermissionGroups[] All permission groups of an user
+     */
+    public function getPermissionGroups(): ArrayCollection
+    {
+        return $this->permissionGroups;
+    }
+
+    public function addPermissionGroup(PermissionGroups $group): self
+    {
+        $this->permissionGroups->add($group);
+        return $this;
+    }
+
+    public function removePermissionGroup(PermissionGroups $group): self
+    {
+        $this->permissionGroups->removeElement($group);
         return $this;
     }
 }
