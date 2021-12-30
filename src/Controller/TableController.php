@@ -133,4 +133,19 @@ class TableController extends DefaultResponsesWithAbstractController
             return $this->exceptionResponse($e->getMessage());
         }
     }
+
+    /**
+     * Fetches all tables the user has access to
+     */
+    #[Route('/api/table/getAllTables', methods: Request::METHOD_GET)]
+    public function getAllTablesForUser(): Response
+    {
+        try {
+            return $this->json([
+                'tables' => $this->tableService->getAllTablesForUser()
+            ]);
+        } catch (NotAuthorizedException $e) {
+            return $this->notAuthorizedResponse();
+        }
+    }
 }

@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\Table;
 use App\Entity\TableElement;
+use App\Entity\User;
 use App\Exception\NotAuthorizedException;
 use App\Exception\TableNotFoundException;
 use App\Repository\TableElementRepository;
@@ -143,6 +144,21 @@ class TableService
         $this->entityManager->persist($element);
         $this->entityManager->flush();
         return $element->getParentTable();
+    }
+
+    /**
+     * Returns all tables the user has access to.
+     *
+     * @return array All tables the user has access to
+     * @throws NotAuthorizedException If the user is not authorized
+     */
+    public function getAllTablesForUser(): array
+    {
+        $user = $this->security->getUser();
+        if (!$user instanceof User) {
+            throw new NotAuthorizedException('You are not authorized for this action');
+        }
+        return $this->tableRepository->findAllForUser($user);
     }
 
 }
