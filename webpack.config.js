@@ -6,6 +6,7 @@ Encore
 
     .enableVueLoader()
     .enableTypeScriptLoader()
+    .enableSassLoader()
 
     .addEntry('app', './assets/src/main.ts')
 

@@ -13,11 +13,12 @@
     "sourceMap": true,
     "baseUrl": ".",
     "types": [
-      "webpack-env"
+      "webpack-env",
+      "vuetify"
     ],
     "paths": {
       "@/*": [
-        "src/*"
+        "assets/src/*"
       ]
     },
     "lib": [
@@ -28,11 +29,8 @@
     ]
   },
   "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "tests/**/*.ts",
-    "tests/**/*.tsx"
+    "assets/**/*.ts",
+    "assets/**/*.vue",
   ],
   "exclude": [
     "node_modules"
