@@ -161,4 +161,24 @@ class TableService
         return $this->tableRepository->findAllForUser($user);
     }
 
+    /**
+     * Gets the table with the provided ID.
+     *
+     * @param int $tableID The ID of the requested table
+     * @return Table The requested table
+     * @throws NotAuthorizedException If the user is not authorized
+     * @throws TableNotFoundException If the table does not exist in the system.
+     */
+    public function getTable(int $tableID): Table
+    {
+        $table = $this->tableRepository->findOneBy(['id' => $tableID]);
+        if (null === $table) {
+            throw new TableNotFoundException('The requested table does not exist');
+        }
+        if (!$this->security->isGranted(TableVoter::VIEW_TABLE, $table)) {
+            throw new NotAuthorizedException('You are not authorized for this action');
+        }
+        return $table;
+    }
+
 }

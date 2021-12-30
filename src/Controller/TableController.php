@@ -148,4 +148,25 @@ class TableController extends DefaultResponsesWithAbstractController
             return $this->notAuthorizedResponse();
         }
     }
+
+    /**
+     * Gets the table with the provided ID.
+     */
+    #[Route('/api/table/getTable', methods: Request::METHOD_POST)]
+    public function getTable(Request $request): Response
+    {
+        if (!$this->validator->validateGetTableRequest($request)) {
+            return $this->invalidRequestResponse();
+        }
+        $requestContent = json_decode($request->getContent(), true);
+        try {
+            return $this->json([
+                'table' => $this->tableService->getTable($requestContent['tableID'])
+            ]);
+        } catch (NotAuthorizedException $e) {
+            return $this->notAuthorizedResponse();
+        } catch (TableNotFoundException $e) {
+            return $this->exceptionResponse($e->getMessage());
+        }
+    }
 }

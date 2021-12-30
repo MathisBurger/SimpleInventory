@@ -67,4 +67,15 @@ class TableRequestValidator extends ValidationHandler
         ]);
         return $this->validateRequest($request, $constraints);
     }
+
+    /**
+     * Validates the getTable endpoint.
+     */
+    public function validateGetTableRequest(Request $request): bool
+    {
+        $constraints = new Collection([
+            'tableID' => new Required(new NotBlank())
+        ]);
+        return $this->validateRequest($request, $constraints);
+    }
 }

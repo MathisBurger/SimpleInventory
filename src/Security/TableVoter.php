@@ -16,6 +16,7 @@ class TableVoter extends Voter
     public const ADD_ELEMENT = 'ADD_ELEMENT';
     public const REMOVE_ELEMENT = 'REMOVE_ELEMENT';
     public const UPDATE_ELEMENT = 'UPDATE_ELEMENT';
+    public const VIEW_TABLE = 'VIEW_TABLE';
 
     private Security $security;
 
@@ -31,7 +32,8 @@ class TableVoter extends Voter
             self::DELETE_TABLE,
             self::ADD_ELEMENT,
             self::REMOVE_ELEMENT,
-            self::UPDATE_ELEMENT
+            self::UPDATE_ELEMENT,
+            self::VIEW_TABLE
         ])) {
             return false;
         }
@@ -55,7 +57,7 @@ class TableVoter extends Voter
 
         return match ($attribute) {
             self::CREATE_TABLE, self::DELETE_TABLE => $this->canCreateDeleteTable(),
-            self::ADD_ELEMENT, self::REMOVE_ELEMENT, self::UPDATE_ELEMENT => $this->canAddElement($loggedInUser, $table),
+            self::ADD_ELEMENT, self::REMOVE_ELEMENT, self::UPDATE_ELEMENT, self::VIEW_TABLE => $this->canAddElement($loggedInUser, $table),
             default => false,
         };
     }
