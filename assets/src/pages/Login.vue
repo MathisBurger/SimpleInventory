@@ -15,7 +15,12 @@
           type="password"
           v-model="password"
         />
-        <v-btn color="primary" depressed style="margin-top: 10px">Login</v-btn>
+        <v-btn
+            color="primary"
+            depressed
+            style="margin-top: 10px"
+            @click="login"
+        >Login</v-btn>
       </v-card-text>
   </v-card>
 </template>
@@ -23,20 +28,26 @@
 <script lang="ts">
 import Vue from 'vue';
 import APIService from "../services/APIService";
+import {LoginData, LoginMethods} from "../../typings/pages/Login";
+import {DefaultProps} from "vue/types/options";
 
-
-export default Vue.extend({
+export default Vue.extend<LoginData, LoginMethods, DefaultProps>({
   name: "Login",
-  data: () => ({
-    rules: [
-        (value: string) => !!value || 'Required.'
-    ],
-    username: '',
-    password: '',
-    apiService: new APIService()
-  }),
+  data() {
+      return {
+        rules: [
+            (value: string) => !!value || 'Required.'
+        ],
+        username: '',
+        password: '',
+        apiService: new APIService()
+      }
+  },
   methods: {
-    login: () => {
+    login() {
+      this.apiService.login(this.username, this.password)
+          .then(() => console.log('Login successful'))
+          .catch(() => console.log('Login failed'));
     }
   }
 

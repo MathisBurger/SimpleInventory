@@ -1,3 +1,9 @@
 {
-  "plugins": ["transform-regenerator"]
+  "plugins": ["transform-regenerator"],
+  "presets": [
+    ["@babel/preset-env", {
+      "useBuiltIns": "usage",
+      "corejs": 3
+    }]
+  ]
 }
