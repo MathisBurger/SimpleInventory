@@ -9,7 +9,9 @@ import routes from "./Routes";
 const router = new VueRouter({
     routes: routes,
     mode: 'history'
-})
+});
+
+Vue.use(VueRouter);
 
 new Vue({
     vuetify,

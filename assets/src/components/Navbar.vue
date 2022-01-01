@@ -3,13 +3,13 @@
       min-height="90vh"
       width="256"
       style="margin-top: 10px;"
-      class="mx-auto"
+      class="mx-auto navbar-left"
       tile
       outlined
       rounded
       raised
   >
-    <v-navigation-drawer permanent>
+    <v-navigation-drawer>
       <v-list
           dense
           nav
@@ -46,5 +46,9 @@ export default {
 </script>
 
 <style scoped>
-
+  .navbar-left {
+    position: absolute;
+    left: 5px;
+    top: 5vh;
+  }
 </style>

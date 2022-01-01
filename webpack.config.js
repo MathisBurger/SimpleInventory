@@ -1,5 +1,6 @@
 var Encore = require('@symfony/webpack-encore');
 const { VuetifyLoaderPlugin } = require('vuetify-loader');
+require("babel-polyfill");
 
 Encore
     .setOutputPath('public/build/')
@@ -20,7 +21,6 @@ Encore
     .enableSourceMaps(!Encore.isProduction())
     .enableVersioning(Encore.isProduction())
     .addPlugin(new VuetifyLoaderPlugin())
-
 ;
 
 module.exports = Encore.getWebpackConfig();
