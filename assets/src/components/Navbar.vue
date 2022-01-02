@@ -17,7 +17,7 @@
         <v-list-item
             v-for="item in items"
             :key="item.title"
-            link
+            :href="item.redirect"
         >
           <v-list-item-icon>
             <v-icon>{{ item.icon }}</v-icon>
@@ -38,7 +38,7 @@ export default {
   data () {
     return {
       items: [
-        {title: 'Dashboard', icon: 'mdi-home'}
+        {title: 'Dashboard', icon: 'mdi-home', redirect: '/dashboard'}
       ]
     }
   },
