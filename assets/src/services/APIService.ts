@@ -1,5 +1,7 @@
 import RestService from "./RestService";
 import {LoginResponse} from "../../typings/Responses/LoginResponse";
+import {User} from "../../typings/User";
+import stores from "./stores";
 
 export default class APIService extends RestService {
 
@@ -16,5 +18,17 @@ export default class APIService extends RestService {
             username,
             password,
         }));
+    }
+
+    /**
+     * Checks if the user is authorized and updates the state out of this.
+     *
+     * @throws Error If the user is not authorized
+     */
+    public async checkLogin(): Promise<User>
+    {
+        const resp = await this.get<User>('/api/check_login');
+        stores.setter.setActiveUser(resp);
+        return resp;
     }
 }

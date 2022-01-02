@@ -4,11 +4,11 @@ import vuetify from "./plugins/vuetify";
 import stores from "./services/stores";
 import VueRouter from "vue-router";
 import 'vuetify/dist/vuetify.min.css';
-import routes from "./Routes";
+import {getRoutes} from "./Routes";
 import Notifications from "vue-notification";
 
 const router = new VueRouter({
-    routes: routes,
+    routes: getRoutes(),
     mode: 'history'
 });
 

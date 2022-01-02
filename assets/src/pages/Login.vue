@@ -28,12 +28,10 @@
 <script lang="ts">
 import Vue from 'vue';
 import APIService from "../services/APIService";
-import {LoginData, LoginMethods} from "../../typings/pages/Login";
-import {DefaultProps} from "vue/types/options";
 import stores from "../services/stores";
 import {User} from "../../typings/User";
 
-export default Vue.extend<LoginData, LoginMethods, DefaultProps>({
+export default Vue.extend({
   name: "Login",
   data() {
       return {

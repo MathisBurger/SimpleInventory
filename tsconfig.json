@@ -18,9 +18,6 @@
       "vue"
     ],
     "paths": {
-      "@/*": [
-        "assets/src/*"
-      ]
     },
     "lib": [
       "esnext",

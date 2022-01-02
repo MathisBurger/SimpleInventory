@@ -12,8 +12,9 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
  */
 class UserFixtures extends Fixture
 {
-    public const USER_MANAGER_USERNAME = 'manager';
-    public const USER_MANAGER_PASSWORD = '123';
+
+    public const USER_NAME = 'user';
+    public const USER_PASSWORD = '123';
 
     public const USER_ADMIN_USERNAME = 'admin';
     public const USER_ADMIN_PASSWORD = '123';
@@ -30,16 +31,17 @@ class UserFixtures extends Fixture
      */
     public function load(ObjectManager $manager): void
     {
-        $managerUser = (new User())
-            ->setUsername(self::USER_MANAGER_PASSWORD)
-            ->addRole(User::ROLE_MANAGER);
-        $managerUser->setPassword($this->hasher->hashPassword($managerUser, self::USER_MANAGER_PASSWORD));
+        $user = (new User())
+            ->setUsername(self::USER_NAME)
+            ->addRole(User::ROLE_USER);
+        $user->setPassword($this->hasher->hashPassword($user, self::USER_PASSWORD));
+
         $adminUser = (new User())
             ->setUsername(self::USER_ADMIN_USERNAME)
             ->addRole(User::ROLE_ADMIN);
         $adminUser->setPassword($this->hasher->hashPassword($adminUser, self::USER_ADMIN_PASSWORD));
 
-        $manager->persist($managerUser);
+        $manager->persist($user);
         $manager->persist($adminUser);
         $manager->flush();
     }

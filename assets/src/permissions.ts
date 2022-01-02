@@ -1,5 +1,5 @@
 export enum PermissionLevels {
-    ROLE_USER,
-    ROLE_MANAGER,
-    ROLE_ADMIN,
+    ALL='ALL',
+    ROLE_USER='ROLE_USER',
+    ROLE_ADMIN='ROLE_ADMIN',
 }
