@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Repository\PermissionGroupsRepository;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -142,6 +141,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removePermissionGroup(PermissionGroups $group): self
     {
         $this->permissionGroups->removeElement($group);
+        return $this;
+    }
+
+    public function addRole(string $role): self
+    {
+        $this->roles[] = $role;
         return $this;
     }
 }

@@ -15,11 +15,15 @@ class IndexController extends AbstractController
     /**
      * The default page controller
      */
+    #[Route('/{vuePath}', requirements: ['vuePath' => '^(?!api).+'], methods: [Request::METHOD_GET])]
+    public function vueRouting(?string $vuePath): Response
+    {
+       return $this->render('base.html.twig');
+    }
+
     #[Route('/', methods: [Request::METHOD_GET])]
     public function index(): Response
     {
-        return $this->json([
-            'message' => 'this is an placeholder message'
-        ], Response::HTTP_OK);
+        return $this->render('base.html.twig');
     }
 }
