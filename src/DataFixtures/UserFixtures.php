@@ -31,10 +31,12 @@ class UserFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $managerUser = (new User())
-            ->setUsername(self::USER_MANAGER_PASSWORD);
+            ->setUsername(self::USER_MANAGER_PASSWORD)
+            ->addRole(User::ROLE_MANAGER);
         $managerUser->setPassword($this->hasher->hashPassword($managerUser, self::USER_MANAGER_PASSWORD));
         $adminUser = (new User())
-            ->setUsername(self::USER_ADMIN_USERNAME);
+            ->setUsername(self::USER_ADMIN_USERNAME)
+            ->addRole(User::ROLE_ADMIN);
         $adminUser->setPassword($this->hasher->hashPassword($adminUser, self::USER_ADMIN_PASSWORD));
 
         $manager->persist($managerUser);

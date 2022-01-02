@@ -5,6 +5,7 @@ import stores from "./services/stores";
 import VueRouter from "vue-router";
 import 'vuetify/dist/vuetify.min.css';
 import routes from "./Routes";
+import Notifications from "vue-notification";
 
 const router = new VueRouter({
     routes: routes,
@@ -12,6 +13,7 @@ const router = new VueRouter({
 });
 
 Vue.use(VueRouter);
+Vue.use(Notifications);
 
 new Vue({
     vuetify,

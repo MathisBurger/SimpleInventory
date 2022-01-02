@@ -16,7 +16,7 @@ use Symfony\Component\Security\Core\Security;
 /**
  * Handles all the user authorization.
  */
-class SecurityController extends AbstractController
+class SecurityController extends DefaultResponsesWithAbstractController
 {
     private Security $security;
     private TokenGenerator $tokenGenerator;
@@ -54,7 +54,8 @@ class SecurityController extends AbstractController
 
                 return $this->json([
                     'user' => $this->security->getUser()->getUserIdentifier(),
-                    'token' => $token
+                    'token' => $token,
+                    'roles' => $this->security->getUser()->getRoles(),
                 ], Response::HTTP_OK);
             }
             return $this->json([

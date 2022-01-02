@@ -8,6 +8,10 @@ import {RouteConfig} from "vue-router";
 const routes: RouteConfig[] = [
     {
         path: '/',
+        redirect: '/dashboard'
+    },
+    {
+        path: '/dashboard',
         component: Home
     },
     {

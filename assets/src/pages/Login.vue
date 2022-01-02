@@ -30,6 +30,8 @@ import Vue from 'vue';
 import APIService from "../services/APIService";
 import {LoginData, LoginMethods} from "../../typings/pages/Login";
 import {DefaultProps} from "vue/types/options";
+import stores from "../services/stores";
+import {User} from "../../typings/User";
 
 export default Vue.extend<LoginData, LoginMethods, DefaultProps>({
   name: "Login",
@@ -40,14 +42,25 @@ export default Vue.extend<LoginData, LoginMethods, DefaultProps>({
         ],
         username: '',
         password: '',
-        apiService: new APIService()
+        apiService: new APIService(),
+        stores: stores
       }
   },
   methods: {
-    login() {
-      this.apiService.login(this.username, this.password)
-          .then(() => console.log('Login successful'))
-          .catch(() => console.log('Login failed'));
+    async login() {
+      try {
+        const login = await this.apiService.login(this.username, this.password);
+        this.stores.setter.setActiveUser(login as User);
+        await this.$router.push('/dashboard');
+      } catch (e) {
+          this.$notify({
+            group: 'main',
+            title: 'Login',
+            text: 'Login failed',
+            type: 'error',
+            duration: 1000,
+          });
+      }
     }
   }
 

@@ -1,3 +1,4 @@
+import {User} from "../../typings/User";
 
 interface GlobalStoreType {
     /**
@@ -7,7 +8,7 @@ interface GlobalStoreType {
         /**
          * The active user that is currently logged in
          */
-        activeUser: null
+        activeUser: User | null
     },
     /**
      * All setter to set the states
@@ -16,14 +17,15 @@ interface GlobalStoreType {
         /**
          * Setts the currently logged in user
          */
-        setActiveUser: () => void;
+        setActiveUser: (user: User) => void;
     }
 }
 
 
 var stores: GlobalStoreType = {
     setter: {
-        setActiveUser: function () {
+        setActiveUser: function (user: User) {
+            stores.state.activeUser = user;
         }
     },
     state: {

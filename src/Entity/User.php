@@ -143,4 +143,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->permissionGroups->removeElement($group);
         return $this;
     }
+
+    public function addRole(string $role): self
+    {
+        $this->roles[] = $role;
+        return $this;
+    }
 }
