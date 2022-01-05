@@ -1,7 +1,7 @@
 import RestService from "./RestService";
 import {LoginResponse} from "../../typings/Responses/LoginResponse";
 import {User} from "../../typings/User";
-import stores from "./stores";
+import {GetAllUsersResponse} from "../../typings/Responses/UserControllerResponses";
 
 export default class APIService extends RestService {
 
@@ -27,16 +27,14 @@ export default class APIService extends RestService {
      */
     public async checkLogin(): Promise<User>
     {
-        const resp = await this.get<User>('/api/check_login');
-        stores.setter.setActiveUser(resp);
-        return resp;
+        return await this.get<User>('/api/check_login');
     }
 
     /**
      * Fetches all users from the database.
      */
-    public async getAllUsers(): Promise<any> {
-        return await this.get<any>('/api/user/allUsers');
+    public async getAllUsers(): Promise<GetAllUsersResponse> {
+        return await this.get<GetAllUsersResponse>('/api/user/allUsers');
     }
 
     /**

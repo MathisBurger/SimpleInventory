@@ -3,7 +3,7 @@
       min-height="90vh"
       width="256"
       style="margin-top: 10px;"
-      class="mx-auto navbar-left"
+      class="mx-auto"
       tile
       outlined
       rounded
@@ -32,23 +32,25 @@
   </v-card>
 </template>
 
-<script>
+<script lang="ts">
+
+import {StorageService} from "../services/storageService";
+import {PermissionLevels} from "../permissions";
+
 export default {
   name: "Navbar",
   data () {
+    const storage = new StorageService();
+    let listItems = [
+      {title: 'Dashboard', icon: 'mdi-home', redirect: '/dashboard'},
+    ];
+
+    if ((storage.getActiveUser()?.roles ?? []).indexOf(PermissionLevels.ROLE_ADMIN) > -1) {
+      listItems.push({title: 'Users', icon: 'mdi-account', redirect: '/user-management'});
+    }
     return {
-      items: [
-        {title: 'Dashboard', icon: 'mdi-home', redirect: '/dashboard'}
-      ]
+      items: listItems
     }
   },
 }
 </script>
-
-<style scoped>
-  .navbar-left {
-    position: absolute;
-    left: 5px;
-    top: 5vh;
-  }
-</style>

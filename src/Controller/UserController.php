@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Exception\GroupNotFoundException;
 use App\Exception\NotAuthorizedException;
 use App\Exception\UserNotFoundException;
@@ -45,9 +46,10 @@ class UserController extends DefaultResponsesWithAbstractController
 
         try {
             $user = $this->userService->createNewUser($requestContent['username'], $requestContent['password'], $requestContent['permissionGroups']);
+
             return $this->json([
                'message' => 'User created successfully',
-               'user' => $this->serializingService->normalize($user)
+               'user' => $this->normalizeUser($user)
             ]);
         } catch (GroupNotFoundException|ExceptionINterface $e) {
             // Permission group was not found in the database
@@ -87,10 +89,27 @@ class UserController extends DefaultResponsesWithAbstractController
     public function allUsers(): Response {
         try {
             return $this->json([
-                'users' => $this->serializingService->normalizeArray($this->userService->getAllUsers())
+                'users' => array_map(function($user) {
+                    return $this->normalizeUser($user);
+                }, $this->userService->getAllUsers())
             ]);
         } catch (NotAuthorizedException|ExceptionInterface $e) {
             return $this->notAuthorizedResponse();
         }
+    }
+
+    /**
+     * Normalizes a user and removes all non-exposable values.
+     *
+     * @param User $user The initial user
+     * @return array The parsed array with deleted important data
+     * @throws ExceptionInterface If the serialization failed
+     */
+    private function normalizeUser(User $user): array
+    {
+        $parsedUser = $this->serializingService->normalize($user);
+        unset($parsedUser['password']);
+        unset($parsedUser['token']);
+        return $parsedUser;
     }
 }

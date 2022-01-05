@@ -1,10 +1,14 @@
 <template>
-  <h1>Test Nachricht</h1>
+  <PageLayout title="Dashboard">
+    <h1>Dashboard placeholder</h1>
+  </PageLayout>
 </template>
 
 <script>
+import PageLayout from "../components/PageLayout";
 export default {
-  name: "Home"
+  name: "Home",
+  components: {PageLayout}
 }
 </script>
 
