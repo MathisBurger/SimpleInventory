@@ -31,4 +31,25 @@ export default class APIService extends RestService {
         stores.setter.setActiveUser(resp);
         return resp;
     }
+
+    /**
+     * Fetches all users from the database.
+     */
+    public async getAllUsers(): Promise<any> {
+        return await this.get<any>('/api/user/allUsers');
+    }
+
+    /**
+     * Fetches all tables from the database.
+     */
+    public async getAllTables(): Promise<any> {
+        return await this.get<any>('/api/table/getAllTables');
+    }
+
+    /**
+     * Fetches all permission groups from database.
+     */
+    public async getAllPermissionGroups(): Promise<any> {
+        return await this.get<any>('/api/permission-group/allGroups');
+    }
 }

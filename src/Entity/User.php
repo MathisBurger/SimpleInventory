@@ -26,7 +26,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'json')]
     private array $roles = [];
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, unique: true)]
     private string $username;
 
     #[ORM\Column(type: 'string', length: 255)]
@@ -125,9 +125,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return ArrayCollection|PermissionGroups[] All permission groups of an user
+     * @return Collection|PermissionGroups[] All permission groups of an user
      */
-    public function getPermissionGroups(): ArrayCollection
+    public function getPermissionGroups(): Collection
     {
         return $this->permissionGroups;
     }
