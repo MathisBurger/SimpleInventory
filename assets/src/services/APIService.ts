@@ -1,7 +1,7 @@
 import RestService from "./RestService";
 import {LoginResponse} from "../../typings/Responses/LoginResponse";
 import {User} from "../../typings/User";
-import {CreateUserResponse, GetAllUsersResponse} from "../../typings/Responses/UserControllerResponses";
+import {CreateUserResponse, DeleteUserRespose, GetAllUsersResponse} from "../../typings/Responses/UserControllerResponses";
 import {GetAllPermissionGroupsResponse} from "../../typings/Responses/PermissionGroupsControllerResponses";
 
 export default class APIService extends RestService {
@@ -60,10 +60,20 @@ export default class APIService extends RestService {
      * @param permissionGroups All permission group IDs of the user
      */
     public async createUser(username: string, password: string, permissionGroups: number[]): Promise<CreateUserResponse> {
-        return await this.post<CreateUserResponse>('/api/user/createUser', JSON.stringify([{
+        return await this.post<CreateUserResponse>('/api/user/createUser', JSON.stringify({
             username,
             password,
             permissionGroups
-        }]));
+        }));
+    }
+
+    /**
+     * Deletes an user from the system.
+     * 
+     * @param userID The ID of the user that should be deleted
+     * @returns The response of the request
+     */
+    public async deleteUser(userID: number): Promise<DeleteUserRespose> {
+        return await this.post<DeleteUserRespose>('/api/user/deleteUser', JSON.stringify({userID}));
     }
 }

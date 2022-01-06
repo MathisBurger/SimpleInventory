@@ -5,6 +5,8 @@
         :items="users"
         class="elevation-1"
         show-select
+        calculate-widths
+        v-model="selected"
       >
       <template v-slot:item.permissionGroups="{item}">
         <v-chip
@@ -33,6 +35,14 @@
           >
             <v-icon left>mdi-plus</v-icon>
             new
+          </v-btn>
+          <v-btn
+            color="error"
+            dark
+            @click="deleteUser"
+          >
+            <v-icon left>mdi-minus</v-icon>
+            delete
           </v-btn>
         </template>
       </v-data-table>
@@ -66,6 +76,7 @@ export default Vue.extend({
         {text: 'Roles', value: 'roles'},
       ],
       addDialogOpen: false,
+      selected: [] as Array<User>
     }
   },
   methods: {
@@ -81,6 +92,19 @@ export default Vue.extend({
     },
     addUser(user: User) {
       this.users.push(user);
+    },
+    async deleteUser() {
+      for (const user of this.selected) {
+        const resp = await this.apiService.deleteUser(user.id ?? 0);
+        this.$notify({
+            group: 'main',
+            title: 'Deletion',
+            text: resp.message,
+            type: resp.success ? 'success' : 'error',
+            duration: 1000,
+        });
+      }
+      this.users = (await this.apiService.getAllUsers()).users;
     }
   },
   async mounted() {

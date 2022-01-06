@@ -28,6 +28,6 @@ class ValidationHandler
      */
     protected function validateRequest(Request $request, Collection $constraints): bool
     {
-        return count($this->validator->validate(json_decode($request->getContent(), true)[0], $constraints)) === 0;
+        return count($this->validator->validate(json_decode($request->getContent(), true), $constraints)) === 0;
     }
 }

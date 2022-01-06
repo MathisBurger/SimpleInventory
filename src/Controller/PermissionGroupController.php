@@ -42,7 +42,7 @@ class PermissionGroupController extends DefaultResponsesWithAbstractController
         if (!$this->validator->validateCreateGroupRequest($request)) {
             return $this->invalidRequestResponse();
         }
-        $requestContent = json_decode($request->getContent(), true)[0];
+        $requestContent = json_decode($request->getContent(), true);
         try {
             $group = $this->permissionGroupService->createPermissionGroup($requestContent['name'], $requestContent['groupColor']);
             return $this->json([
@@ -63,7 +63,7 @@ class PermissionGroupController extends DefaultResponsesWithAbstractController
         if (!$this->validator->validateDeleteGroupRequest($request)) {
             return $this->notAuthorizedResponse();
         }
-        $requestContent = json_decode($request->getContent(), true)[0];
+        $requestContent = json_decode($request->getContent(), true);
         try {
             $this->permissionGroupService->deletePermissionGroup($requestContent['groupID']);
             return $this->json([
@@ -86,7 +86,7 @@ class PermissionGroupController extends DefaultResponsesWithAbstractController
         if (!$this->validator->validateAddUserRequest($request)) {
             return $this->invalidRequestResponse();
         }
-        $requestContent = json_decode($request->getContent(), true)[0];
+        $requestContent = json_decode($request->getContent(), true);
         try {
             $this->permissionGroupService->addUserToPermissionGroup($requestContent['groupID'], $requestContent['userID']);
             return $this->json([
@@ -108,7 +108,7 @@ class PermissionGroupController extends DefaultResponsesWithAbstractController
         if (!$this->validator->validateRemoveUserRequest($request)) {
             return $this->invalidRequestResponse();
         }
-        $requestContent = json_decode($request->getContent(), true)[0];
+        $requestContent = json_decode($request->getContent(), true);
         try {
             $this->permissionGroupService->removeUserFromPermissionGroup($requestContent['groupID'], $requestContent['userID']);
             return $this->json([
@@ -130,7 +130,7 @@ class PermissionGroupController extends DefaultResponsesWithAbstractController
         if (!$this->validator->validateAddTableRequest($request)) {
             return $this->invalidRequestResponse();
         }
-        $requestContent = json_decode($request->getContent(), true)[0];
+        $requestContent = json_decode($request->getContent(), true);
         try {
             $this->permissionGroupService->addTableToPermissionGroup($requestContent['groupID'], $requestContent['tableID']);
             return $this->json([
@@ -152,7 +152,7 @@ class PermissionGroupController extends DefaultResponsesWithAbstractController
         if (!$this->validator->validateRemoveTableRequest($request)) {
             return $this->invalidRequestResponse();
         }
-        $requestContent = json_decode($request->getContent(), true)[0];
+        $requestContent = json_decode($request->getContent(), true);
         try {
             $this->permissionGroupService->removeTableFromPermissionGroup($requestContent['groupID'], $requestContent['tableID']);
             return $this->json([

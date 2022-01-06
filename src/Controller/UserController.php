@@ -42,7 +42,7 @@ class UserController extends DefaultResponsesWithAbstractController
         if (!$this->validator->validateCreateUserRequest($request)) {
             return $this->invalidRequestResponse();
         }
-        $requestContent = json_decode($request->getContent(), true)[0];
+        $requestContent = json_decode($request->getContent(), true);
 
         try {
             $user = $this->userService->createNewUser($requestContent['username'], $requestContent['password'], $requestContent['permissionGroups']);
@@ -68,11 +68,12 @@ class UserController extends DefaultResponsesWithAbstractController
         if (!$this->validator->validateDeleteUserRequest($request)) {
             return $this->invalidRequestResponse();
         }
-        $requestContent = json_decode($request->getContent(), true)[0];
+        $requestContent = json_decode($request->getContent(), true);
         try {
             $this->userService->deleteUser($requestContent['userID']);
             return $this->json([
-                'message' => 'Successfully removed user from system'
+                'message' => 'Successfully removed user from system',
+                'success' => true,
             ]);
         } catch (NotAuthorizedException $e) {
             return $this->notAuthorizedResponse();
