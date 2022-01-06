@@ -24,7 +24,19 @@
           {{role.replaceAll('ROLE_', '')}}
         </v-chip>
       </template>
+        <template v-slot:top>
+          <v-btn
+            color="primary"
+            dark
+            class="ml-5"
+            @click="addDialogOpen = true"
+          >
+            <v-icon left>mdi-plus</v-icon>
+            new
+          </v-btn>
+        </template>
       </v-data-table>
+    <AddUserDialog :open="addDialogOpen" :close-dialog="() => {addDialogOpen = false}" />
   </PageLayout>
 </template>
 
@@ -34,10 +46,11 @@ import PageLayout from "../components/PageLayout.vue";
 import APIService from "../services/APIService";
 import {User} from "../../typings/User";
 import {PermissionLevels} from "../permissions";
+import AddUserDialog from "../components/dialog/user/AddUserDialog.vue";
 
 export default Vue.extend({
   name: "UserManagement",
-  components: {PageLayout},
+  components: {AddUserDialog, PageLayout},
   data() {
     return {
       apiService: new APIService(),
@@ -47,7 +60,8 @@ export default Vue.extend({
         {text: 'Username', value: 'userIdentifier'},
         {text: 'Permission-groups', value: 'permissionGroups'},
         {text: 'Roles', value: 'roles'},
-      ]
+      ],
+      addDialogOpen: false,
     }
   },
   methods: {

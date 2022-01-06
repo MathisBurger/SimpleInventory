@@ -1,7 +1,8 @@
 import RestService from "./RestService";
 import {LoginResponse} from "../../typings/Responses/LoginResponse";
 import {User} from "../../typings/User";
-import {GetAllUsersResponse} from "../../typings/Responses/UserControllerResponses";
+import {CreateUserResponse, GetAllUsersResponse} from "../../typings/Responses/UserControllerResponses";
+import {GetAllPermissionGroupsResponse} from "../../typings/Responses/PermissionGroupsControllerResponses";
 
 export default class APIService extends RestService {
 
@@ -47,7 +48,22 @@ export default class APIService extends RestService {
     /**
      * Fetches all permission groups from database.
      */
-    public async getAllPermissionGroups(): Promise<any> {
-        return await this.get<any>('/api/permission-group/allGroups');
+    public async getAllPermissionGroups(): Promise<GetAllPermissionGroupsResponse> {
+        return await this.get<GetAllPermissionGroupsResponse>('/api/permission-group/allGroups');
+    }
+
+    /**
+     * Creates a new user in the system.
+     *
+     * @param username The username of the user
+     * @param password The password of the user
+     * @param permissionGroups All permission group IDs of the user
+     */
+    public async createUser(username: string, password: string, permissionGroups: number[]): Promise<CreateUserResponse> {
+        return await this.post<CreateUserResponse>('/api/user/createUser', JSON.stringify([{
+            username,
+            password,
+            permissionGroups
+        }]));
     }
 }
