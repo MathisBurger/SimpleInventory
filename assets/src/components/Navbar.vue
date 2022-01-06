@@ -46,7 +46,10 @@ export default {
     ];
 
     if ((storage.getActiveUser()?.roles ?? []).indexOf(PermissionLevels.ROLE_ADMIN) > -1) {
-      listItems.push({title: 'Users', icon: 'mdi-account', redirect: '/user-management'});
+      listItems.push(
+        {title: 'Users', icon: 'mdi-account', redirect: '/user-management'},
+        {title: 'Groups', icon: 'mdi-account-box-multiple', redirect: '/permission-groups'}
+        );
     }
     return {
       items: listItems
