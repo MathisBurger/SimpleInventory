@@ -16,6 +16,23 @@
       <template v-slot:item.tables="{item}">
           {{item.tables.length}}
       </template>
+      <template v-slot:top>
+          <v-btn
+            color="primary"
+            dark
+            class="ml-5"
+          >
+              <v-icon left>mdi-plus</v-icon>
+              new
+          </v-btn>
+          <v-btn
+            color="error"
+            dark
+          >
+              <v-icon left>mdi-minus</v-icon>
+              delete
+          </v-btn>
+      </template>
       </v-data-table>
     </PageLayout>
 </template>
