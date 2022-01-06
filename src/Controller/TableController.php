@@ -39,7 +39,7 @@ class TableController extends DefaultResponsesWithAbstractController
         if (!$this->validator->validateCreateTableRequest($request)) {
             return $this->invalidRequestResponse();
         }
-        $requestContent = json_decode($request->getContent(), true);
+        $requestContent = json_decode($request->getContent(), true)[0];
         try {
             $table = $this->tableService->createTable($requestContent['tableName']);
             return $this->json([
@@ -59,7 +59,7 @@ class TableController extends DefaultResponsesWithAbstractController
         if (!$this->validator->validateDeleteTableRequest($request)) {
             return $this->invalidRequestResponse();
         }
-        $requestContent = json_decode($request->getContent(), true);
+        $requestContent = json_decode($request->getContent(), true)[0];
         try {
             $this->tableService->deleteTable($requestContent['tableID']);
             return $this->json([
@@ -81,7 +81,7 @@ class TableController extends DefaultResponsesWithAbstractController
         if (!$this->validator->validateAddElementRequest($request)) {
             return $this->invalidRequestResponse();
         }
-        $requestContent = json_decode($request->getContent(), true);
+        $requestContent = json_decode($request->getContent(), true)[0];
         try {
             $table = $this->tableService->addElement($requestContent['tableID'], $requestContent['content']);
             return $this->json([
@@ -104,7 +104,7 @@ class TableController extends DefaultResponsesWithAbstractController
         if (!$this->validator->validateRemoveElementRequest($request)) {
             return $this->invalidRequestResponse();
         }
-        $requestContent = json_decode($request->getContent(), true);
+        $requestContent = json_decode($request->getContent(), true)[0];
         try {
             $table = $this->tableService->removeElement($requestContent['elementID']);
             return $this->json([
@@ -127,7 +127,7 @@ class TableController extends DefaultResponsesWithAbstractController
         if (!$this->validator->validateUpdateElementRequest($request)) {
             return $this->invalidRequestResponse();
         }
-        $requestContent = json_decode($request->getContent(), true);
+        $requestContent = json_decode($request->getContent(), true)[0];
         try {
             $table = $this->tableService->updateElement($requestContent['elementID'], $requestContent['content']);
             return $this->json([
@@ -165,7 +165,7 @@ class TableController extends DefaultResponsesWithAbstractController
         if (!$this->validator->validateGetTableRequest($request)) {
             return $this->invalidRequestResponse();
         }
-        $requestContent = json_decode($request->getContent(), true);
+        $requestContent = json_decode($request->getContent(), true)[0];
         try {
             return $this->json([
                 'table' => $this->serializingService->normalize($this->tableService->getTable($requestContent['tableID']))

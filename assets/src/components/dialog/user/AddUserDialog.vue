@@ -85,6 +85,7 @@ export default Vue.extend({
   props: {
     open: Boolean,
     closeDialog: Function,
+    addUserToList: Function,
   },
   data() {
     return {
@@ -110,7 +111,7 @@ export default Vue.extend({
             this.groups
         );
         if (resp.user) {
-          console.log(resp.user);
+          this.addUserToList(resp.user);
           this.$notify({
             text: resp.message,
             type: 'success',

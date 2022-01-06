@@ -36,7 +36,11 @@
           </v-btn>
         </template>
       </v-data-table>
-    <AddUserDialog :open="addDialogOpen" :close-dialog="() => {addDialogOpen = false}" />
+    <AddUserDialog 
+     :open="addDialogOpen"
+     :close-dialog="() => {addDialogOpen = false}"
+     :addUserToList="addUser"
+    />
   </PageLayout>
 </template>
 
@@ -74,6 +78,9 @@ export default Vue.extend({
         default:
           return '#fff';
       }
+    },
+    addUser(user: User) {
+      this.users.push(user);
     }
   },
   async mounted() {

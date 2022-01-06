@@ -42,7 +42,7 @@ class UserController extends DefaultResponsesWithAbstractController
         if (!$this->validator->validateCreateUserRequest($request)) {
             return $this->invalidRequestResponse();
         }
-        $requestContent = json_decode($request->getContent(), true);
+        $requestContent = json_decode($request->getContent(), true)[0];
 
         try {
             $user = $this->userService->createNewUser($requestContent['username'], $requestContent['password'], $requestContent['permissionGroups']);
@@ -68,7 +68,7 @@ class UserController extends DefaultResponsesWithAbstractController
         if (!$this->validator->validateDeleteUserRequest($request)) {
             return $this->invalidRequestResponse();
         }
-        $requestContent = json_decode($request->getContent(), true);
+        $requestContent = json_decode($request->getContent(), true)[0];
         try {
             $this->userService->deleteUser($requestContent['userID']);
             return $this->json([
