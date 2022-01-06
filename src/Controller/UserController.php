@@ -2,14 +2,17 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Exception\GroupNotFoundException;
 use App\Exception\NotAuthorizedException;
 use App\Exception\UserNotFoundException;
+use App\Service\SerializingService;
 use App\Service\UserService;
 use App\Validator\UserRequestValidator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 
 /**
  * REST Controller for all user actions
@@ -18,11 +21,16 @@ class UserController extends DefaultResponsesWithAbstractController
 {
     private UserRequestValidator $validator;
     private UserService $userService;
+    private SerializingService $serializingService;
 
-    public function __construct(UserRequestValidator $userRequestValidator, UserService $userService)
-    {
+    public function __construct(
+        UserRequestValidator $userRequestValidator,
+        UserService $userService,
+        SerializingService $serializingService
+    ) {
         $this->validator = $userRequestValidator;
         $this->userService = $userService;
+        $this->serializingService = $serializingService;
     }
 
     /**
@@ -38,11 +46,12 @@ class UserController extends DefaultResponsesWithAbstractController
 
         try {
             $user = $this->userService->createNewUser($requestContent['username'], $requestContent['password'], $requestContent['permissionGroups']);
+
             return $this->json([
                'message' => 'User created successfully',
-               'user' => $user
+               'user' => $this->normalizeUser($user)
             ]);
-        } catch (GroupNotFoundException $e) {
+        } catch (GroupNotFoundException|ExceptionINterface $e) {
             // Permission group was not found in the database
             return $this->exceptionResponse($e->getMessage());
         } catch (NotAuthorizedException $e) {
@@ -63,7 +72,8 @@ class UserController extends DefaultResponsesWithAbstractController
         try {
             $this->userService->deleteUser($requestContent['userID']);
             return $this->json([
-                'message' => 'Successfully removed user from system'
+                'message' => 'Successfully removed user from system',
+                'success' => true,
             ]);
         } catch (NotAuthorizedException $e) {
             return $this->notAuthorizedResponse();
@@ -80,10 +90,27 @@ class UserController extends DefaultResponsesWithAbstractController
     public function allUsers(): Response {
         try {
             return $this->json([
-                'users' => $this->userService->getAllUsers()
+                'users' => array_map(function($user) {
+                    return $this->normalizeUser($user);
+                }, $this->userService->getAllUsers())
             ]);
-        } catch (NotAuthorizedException $e) {
+        } catch (NotAuthorizedException|ExceptionInterface $e) {
             return $this->notAuthorizedResponse();
         }
+    }
+
+    /**
+     * Normalizes a user and removes all non-exposable values.
+     *
+     * @param User $user The initial user
+     * @return array The parsed array with deleted important data
+     * @throws ExceptionInterface If the serialization failed
+     */
+    private function normalizeUser(User $user): array
+    {
+        $parsedUser = $this->serializingService->normalize($user);
+        unset($parsedUser['password']);
+        unset($parsedUser['token']);
+        return $parsedUser;
     }
 }

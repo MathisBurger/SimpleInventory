@@ -2,6 +2,7 @@
 
 namespace App\Validator;
 
+use Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Validation;

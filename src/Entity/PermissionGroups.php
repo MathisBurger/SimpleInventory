@@ -63,9 +63,9 @@ class PermissionGroups
     }
 
     /**
-     * @return ArrayCollection|Table[] All tables of an permission group
+     * @return Collection|Table[] All tables of an permission group
      */
-    public function getTables(): ArrayCollection
+    public function getTables(): Collection
     {
         return $this->tables;
     }

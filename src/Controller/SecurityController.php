@@ -78,7 +78,7 @@ class SecurityController extends DefaultResponsesWithAbstractController
         $user = $this->security->getUser();
         if ($user instanceof User) {
             return $this->json([
-                'user' => $user->getUserIdentifier(),
+                'userIdentifier' => $user->getUserIdentifier(),
                 'roles' => $user->getRoles()
             ], Response::HTTP_OK);
         }

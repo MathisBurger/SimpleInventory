@@ -28,8 +28,8 @@
 <script lang="ts">
 import Vue from 'vue';
 import APIService from "../services/APIService";
-import stores from "../services/stores";
 import {User} from "../../typings/User";
+import {StorageService} from "../services/storageService";
 
 export default Vue.extend({
   name: "Login",
@@ -41,14 +41,14 @@ export default Vue.extend({
         username: '',
         password: '',
         apiService: new APIService(),
-        stores: stores
+        storage: new StorageService(),
       }
   },
   methods: {
     async login() {
       try {
         const login = await this.apiService.login(this.username, this.password);
-        this.stores.setter.setActiveUser(login as User);
+        this.storage.setActiveUser(login as User);
         await this.$router.push('/dashboard');
       } catch (e) {
           this.$notify({

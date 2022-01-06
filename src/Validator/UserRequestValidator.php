@@ -5,7 +5,8 @@ namespace App\Validator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Contracts\Service\Attribute\Required;
+use Symfony\Component\Validator\Constraints\Type;
+use Symfony\Component\Validator\Constraints\Required;
 
 class UserRequestValidator extends ValidationHandler
 {
@@ -16,9 +17,9 @@ class UserRequestValidator extends ValidationHandler
     public function validateCreateUserRequest(Request $request): bool
     {
         $constraints = new Collection([
-            'username' => new Required(new NotBlank()),
-            'password' => new Required(new NotBlank()),
-            'permissionGroups' => new Required(new NotBlank(), array())
+            'username' => new Type('string'),
+            'password' => new Type('string'),
+            'permissionGroups' => new Type('array'),
         ]);
         return $this->validateRequest($request, $constraints);
     }

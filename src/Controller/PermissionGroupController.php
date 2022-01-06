@@ -7,10 +7,12 @@ use App\Exception\GroupNotFoundException;
 use App\Exception\NotAuthorizedException;
 use App\Exception\UserNotFoundException;
 use App\Service\PermissionGroupService;
+use App\Service\SerializingService;
 use App\Validator\PermissionGroupRequestValidator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 
 /**
  * REST Controller for all permission group actions
@@ -19,13 +21,16 @@ class PermissionGroupController extends DefaultResponsesWithAbstractController
 {
     private PermissionGroupRequestValidator $validator;
     private PermissionGroupService $permissionGroupService;
+    private SerializingService $serializingService;
 
     public function __construct(
         PermissionGroupRequestValidator $validator,
-        PermissionGroupService $permissionGroupService
+        PermissionGroupService $permissionGroupService,
+        SerializingService $serializingService
     ) {
         $this->validator = $validator;
         $this->permissionGroupService = $permissionGroupService;
+        $this->serializingService = $serializingService;
     }
 
     /**
@@ -42,9 +47,9 @@ class PermissionGroupController extends DefaultResponsesWithAbstractController
             $group = $this->permissionGroupService->createPermissionGroup($requestContent['name'], $requestContent['groupColor']);
             return $this->json([
                 'message' => 'Successfully created new permission group',
-                'group' => $group
+                'group' => $this->serializingService->normalize($group)
             ]);
-        } catch (NotAuthorizedException $e) {
+        } catch (NotAuthorizedException|ExceptionInterface $e) {
             return $this->notAuthorizedResponse();
         }
     }
@@ -87,7 +92,7 @@ class PermissionGroupController extends DefaultResponsesWithAbstractController
             return $this->json([
                 'message' => 'User successfully added to permission group'
             ]);
-        } catch (AlreadyContainsException | UserNotFoundException $e) {
+        } catch (AlreadyContainsException|UserNotFoundException $e) {
             return $this->exceptionResponse($e->getMessage());
         } catch (NotAuthorizedException $e) {
             return $this->notAuthorizedResponse();
@@ -168,9 +173,9 @@ class PermissionGroupController extends DefaultResponsesWithAbstractController
     {
         try {
             return $this->json([
-                'groups' => $this->permissionGroupService->getAllGroups()
+                'groups' => $this->serializingService->normalizeArray($this->permissionGroupService->getAllGroups())
             ]);
-        } catch (NotAuthorizedException $e) {
+        } catch (NotAuthorizedException|ExceptionInterface $e) {
             return $this->notAuthorizedResponse();
         }
     }

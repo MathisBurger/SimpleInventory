@@ -8,6 +8,7 @@ import routes, {ExpandedRoute} from "../Routes";
 import {PermissionLevels} from "../permissions";
 import {User} from "../../typings/User";
 import APIService from "../services/APIService";
+import {StorageService} from "../services/storageService";
 
 export default Vue.extend({
   name: "PermissionWrapper",
@@ -17,6 +18,7 @@ export default Vue.extend({
       route: this.$router.currentRoute.path,
       rootRoutes: routes,
       apiService: new APIService(),
+      storage: new StorageService(),
     }
   },
   methods: {
@@ -58,7 +60,9 @@ export default Vue.extend({
    * Checks the user permission on mount
    */
   async mounted() {
-    if (!this.checkPermission(await this.apiService.checkLogin())) {
+    const usr = await this.apiService.checkLogin();
+    this.storage.setActiveUser(usr);
+    if (!this.checkPermission(usr)) {
       await this.$router.push('/login');
     }
   }

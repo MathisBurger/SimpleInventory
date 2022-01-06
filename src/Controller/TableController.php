@@ -4,11 +4,13 @@ namespace App\Controller;
 
 use App\Exception\NotAuthorizedException;
 use App\Exception\TableNotFoundException;
+use App\Service\SerializingService;
 use App\Service\TableService;
 use App\Validator\TableRequestValidator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 
 /**
  * REST Controller for table management.
@@ -17,11 +19,16 @@ class TableController extends DefaultResponsesWithAbstractController
 {
     private TableRequestValidator $validator;
     private TableService $tableService;
+    private SerializingService $serializingService;
 
-    public function __construct(TableRequestValidator $validator, TableService $tableService)
-    {
+    public function __construct(
+        TableRequestValidator $validator,
+        TableService $tableService,
+        SerializingService $serializingService
+    ) {
         $this->validator = $validator;
         $this->tableService = $tableService;
+        $this->serializingService = $serializingService;
     }
 
     /**
@@ -37,9 +44,9 @@ class TableController extends DefaultResponsesWithAbstractController
             $table = $this->tableService->createTable($requestContent['tableName']);
             return $this->json([
                 'message' => 'successfully created table',
-                'table' => $table
+                'table' => $this->serializingService->normalize($table)
             ]);
-        } catch (NotAuthorizedException $e) {
+        } catch (NotAuthorizedException|ExceptionInterface $e) {
             return $this->notAuthorizedResponse();
         }
     }
@@ -79,11 +86,11 @@ class TableController extends DefaultResponsesWithAbstractController
             $table = $this->tableService->addElement($requestContent['tableID'], $requestContent['content']);
             return $this->json([
                 'message' => 'successfully added table element',
-                'table' => $table
+                'table' => $this->serializingService->normalize($table)
             ]);
         } catch (NotAuthorizedException $e) {
             return $this->notAuthorizedResponse();
-        } catch (TableNotFoundException $e) {
+        } catch (TableNotFoundException|ExceptionInterface $e) {
             return $this->exceptionResponse($e->getMessage());
         }
     }
@@ -102,11 +109,11 @@ class TableController extends DefaultResponsesWithAbstractController
             $table = $this->tableService->removeElement($requestContent['elementID']);
             return $this->json([
                 'message' => 'Successfully removed table element',
-                'table' => $table
+                'table' => $this->serializingService->normalize($table)
             ]);
         } catch (NotAuthorizedException $e) {
             return $this->notAuthorizedResponse();
-        } catch (TableNotFoundException $e) {
+        } catch (TableNotFoundException|ExceptionInterface $e) {
             return $this->exceptionResponse($e->getMessage());
         }
     }
@@ -125,11 +132,11 @@ class TableController extends DefaultResponsesWithAbstractController
             $table = $this->tableService->updateElement($requestContent['elementID'], $requestContent['content']);
             return $this->json([
                 'message' => 'successfully updated table element',
-                'table' => $table
+                'table' => $this->serializingService->normalize($table)
             ]);
         } catch (NotAuthorizedException $e) {
             return $this->notAuthorizedResponse();
-        } catch (TableNotFoundException $e) {
+        } catch (TableNotFoundException|ExceptionInterface $e) {
             return $this->exceptionResponse($e->getMessage());
         }
     }
@@ -142,9 +149,9 @@ class TableController extends DefaultResponsesWithAbstractController
     {
         try {
             return $this->json([
-                'tables' => $this->tableService->getAllTablesForUser()
+                'tables' => $this->serializingService->normalizeArray($this->tableService->getAllTablesForUser())
             ]);
-        } catch (NotAuthorizedException $e) {
+        } catch (NotAuthorizedException|ExceptionInterface $e) {
             return $this->notAuthorizedResponse();
         }
     }
@@ -161,11 +168,11 @@ class TableController extends DefaultResponsesWithAbstractController
         $requestContent = json_decode($request->getContent(), true);
         try {
             return $this->json([
-                'table' => $this->tableService->getTable($requestContent['tableID'])
+                'table' => $this->serializingService->normalize($this->tableService->getTable($requestContent['tableID']))
             ]);
         } catch (NotAuthorizedException $e) {
             return $this->notAuthorizedResponse();
-        } catch (TableNotFoundException $e) {
+        } catch (TableNotFoundException|ExceptionInterface $e) {
             return $this->exceptionResponse($e->getMessage());
         }
     }
