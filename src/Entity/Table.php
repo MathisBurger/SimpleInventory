@@ -38,6 +38,7 @@ class Table
     public function addPermissionGroup(PermissionGroups $group): self
     {
         $this->permissionGroups->add($group);
+        $group->addTable($this);
         return $this;
     }
 

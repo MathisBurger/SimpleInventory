@@ -2,7 +2,8 @@ import RestService from "./RestService";
 import {LoginResponse} from "../../typings/Responses/LoginResponse";
 import {User} from "../../typings/User";
 import {CreateUserResponse, DeleteUserRespose, GetAllUsersResponse} from "../../typings/Responses/UserControllerResponses";
-import {GetAllPermissionGroupsResponse} from "../../typings/Responses/PermissionGroupsControllerResponses";
+import {CreatePermissionGroupResponse, DeletePermissionGroupResponse, GetAllPermissionGroupsResponse} from "../../typings/Responses/PermissionGroupsControllerResponses";
+import { GetAllTablesResponse } from "assets/typings/Responses/TableControllerResponses";
 
 export default class APIService extends RestService {
 
@@ -41,8 +42,8 @@ export default class APIService extends RestService {
     /**
      * Fetches all tables from the database.
      */
-    public async getAllTables(): Promise<any> {
-        return await this.get<any>('/api/table/getAllTables');
+    public async getAllTables(): Promise<GetAllTablesResponse> {
+        return await this.get<GetAllTablesResponse>('/api/table/getAllTables');
     }
 
     /**
@@ -75,5 +76,33 @@ export default class APIService extends RestService {
      */
     public async deleteUser(userID: number): Promise<DeleteUserRespose> {
         return await this.post<DeleteUserRespose>('/api/user/deleteUser', JSON.stringify({userID}));
+    }
+
+    /**
+     * Creates a new permission group in the system.
+     * 
+     * @param name The new name of the poermission group
+     * @param groupColor The color of the new permission group
+     * @param tables All IDs of the tables that are given
+     * @returns  The response of the request
+     */
+    public async createPermissionGroup(name: string, groupColor: string, tables: number[]): Promise<CreatePermissionGroupResponse> {
+        return await this.post<CreatePermissionGroupResponse>('/api/permission-group/createGroup', JSON.stringify({
+            name,
+            groupColor,
+            tables
+        }));
+    }
+
+    /**
+     * Deletes an existing permission group from the system.
+     * 
+     * @param id The ID of the table that should be deleted
+     * @returns The response of the request
+     */
+    public async deletePermissionGroup(id: number): Promise<DeletePermissionGroupResponse> {
+        return await this.post<DeletePermissionGroupResponse>('/api/permission-group/deleteGroup', JSON.stringify({
+            groupID: id
+        }));
     }
 }

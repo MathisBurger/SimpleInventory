@@ -5,6 +5,7 @@ namespace App\Validator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Validator\Constraints\Collection;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Type;
 use Symfony\Contracts\Service\Attribute\Required;
 
 class PermissionGroupRequestValidator extends ValidationHandler
@@ -16,8 +17,9 @@ class PermissionGroupRequestValidator extends ValidationHandler
     public function validateCreateGroupRequest(Request $request): bool
     {
         $constraints = new Collection([
-            'name' => new Required(new NotBlank()),
-            'groupColor' => new Required(new NotBlank())
+            'name' => new Type('string'),
+            'groupColor' => new Type('string'),
+            'tables' => new Type('array')
         ]);
         return $this->validateRequest($request, $constraints);
     }
@@ -28,7 +30,7 @@ class PermissionGroupRequestValidator extends ValidationHandler
     public function validateDeleteGroupRequest(Request $request): bool
     {
         $constraints = new Collection([
-            'groupID' => new Required(new NotBlank())
+            'groupID' => new Type('integer')
         ]);
         return $this->validateRequest($request, $constraints);
     }

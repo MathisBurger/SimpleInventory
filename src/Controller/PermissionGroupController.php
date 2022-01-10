@@ -44,7 +44,7 @@ class PermissionGroupController extends DefaultResponsesWithAbstractController
         }
         $requestContent = json_decode($request->getContent(), true);
         try {
-            $group = $this->permissionGroupService->createPermissionGroup($requestContent['name'], $requestContent['groupColor']);
+            $group = $this->permissionGroupService->createPermissionGroup($requestContent['name'], $requestContent['groupColor'], $requestContent['tables']);
             return $this->json([
                 'message' => 'Successfully created new permission group',
                 'group' => $this->serializingService->normalize($group)
