@@ -4,6 +4,7 @@ import {RouteConfig} from "vue-router";
 import {PermissionLevels} from "./permissions";
 import UserManagement from "./pages/UserManagement.vue";
 import PermissionGroups from "./pages/PermissionGroups.vue";
+import TablesList from "./pages/TablesList.vue";
 
 export type ExpandedRoute =  {
     permissions: PermissionLevels[];
@@ -37,6 +38,11 @@ const routes: ExpandedRoute[] = [
         path: '/permission-groups',
         component: PermissionGroups,
         permissions: [PermissionLevels.ROLE_ADMIN]
+    },
+    {
+        path: '/tables',
+        component: TablesList,
+        permissions: [PermissionLevels.ROLE_USER]
     }
 ];
 

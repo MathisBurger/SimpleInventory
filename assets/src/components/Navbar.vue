@@ -43,6 +43,7 @@ export default {
     const storage = new StorageService();
     let listItems = [
       {title: 'Dashboard', icon: 'mdi-home', redirect: '/dashboard'},
+      {title: 'Tables', icon: 'mdi-table', redirect: '/tables'},
     ];
 
     if ((storage.getActiveUser()?.roles ?? []).indexOf(PermissionLevels.ROLE_ADMIN) > -1) {
