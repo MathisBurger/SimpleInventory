@@ -53,12 +53,16 @@ class PermissionGroupService
         $group = (new PermissionGroups())
             ->setName($name)
             ->setGroupColor($groupColor);
-        $this->entityManager->persist($group);
-        $this->entityManager->flush();
         foreach ($tables as $tableID) {
-            $this->addTableToPermissionGroup($group->getId(), $tableID);
+            $table = $this->tableRepository->findOneBy(['id' => $tableID]);
+            if (null === $table) {
+                throw new NotAuthorizedException('You do not have access to this table');
+            }
+            $group->addTable($table);
+            $this->entityManager->persist($table);
+            $this->entityManager->persist($group);
         }
-        $this->entityManager->refresh($group);
+        $this->entityManager->flush();
         return $group;
     }
 
