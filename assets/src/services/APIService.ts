@@ -3,7 +3,7 @@ import {LoginResponse} from "../../typings/Responses/LoginResponse";
 import {User} from "../../typings/User";
 import {CreateUserResponse, DeleteUserRespose, GetAllUsersResponse} from "../../typings/Responses/UserControllerResponses";
 import {CreatePermissionGroupResponse, DeletePermissionGroupResponse, GetAllPermissionGroupsResponse} from "../../typings/Responses/PermissionGroupsControllerResponses";
-import { GetAllTablesResponse } from "assets/typings/Responses/TableControllerResponses";
+import { CreateTableResponse, DeleteTableResponse, GetAllTablesResponse } from "assets/typings/Responses/TableControllerResponses";
 
 export default class APIService extends RestService {
 
@@ -103,6 +103,30 @@ export default class APIService extends RestService {
     public async deletePermissionGroup(id: number): Promise<DeletePermissionGroupResponse> {
         return await this.post<DeletePermissionGroupResponse>('/api/permission-group/deleteGroup', JSON.stringify({
             groupID: id
+        }));
+    }
+
+    /**
+     * Creates a new table in the system.
+     * 
+     * @param name The name of the new table
+     * @returns The response of the request
+     */
+    public async createTable(name: string): Promise<CreateTableResponse> {
+        return await this.post<CreateTableResponse>('/api/table/createTable', JSON.stringify({
+            tableName: name
+        }));
+    }
+
+    /**
+     * Deletes an table from the inventory system.
+     * 
+     * @param id The ID of the table that should be deleted
+     * @returns The response of the request
+     */
+    public async deleteTable(id: number): Promise<DeleteTableResponse> {
+        return await this.post<DeleteTableResponse>('/api/table/deleteTable', JSON.stringify({
+            tableID: id,
         }));
     }
 }
