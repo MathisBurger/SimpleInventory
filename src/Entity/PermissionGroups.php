@@ -7,9 +7,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\Pure;
+use JsonSerializable;
 
 #[ORM\Entity(repositoryClass: PermissionGroupsRepository::class)]
-class PermissionGroups
+class PermissionGroups implements JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -95,5 +96,15 @@ class PermissionGroups
         $this->tables->removeElement($table);
         $table->removePermissionGroup($this);
         return $this;
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'groupColor' => $this->groupColor,
+            'tables' => count($this->tables->getValues())
+        ];
     }
 }

@@ -21,16 +21,13 @@ class UserController extends DefaultResponsesWithAbstractController
 {
     private UserRequestValidator $validator;
     private UserService $userService;
-    private SerializingService $serializingService;
 
     public function __construct(
         UserRequestValidator $userRequestValidator,
         UserService $userService,
-        SerializingService $serializingService
     ) {
         $this->validator = $userRequestValidator;
         $this->userService = $userService;
-        $this->serializingService = $serializingService;
     }
 
     /**
@@ -49,7 +46,7 @@ class UserController extends DefaultResponsesWithAbstractController
 
             return $this->json([
                'message' => 'User created successfully',
-               'user' => $this->normalizeUser($user)
+               'user' => $user
             ]);
         } catch (GroupNotFoundException|ExceptionINterface $e) {
             // Permission group was not found in the database
@@ -91,26 +88,11 @@ class UserController extends DefaultResponsesWithAbstractController
         try {
             return $this->json([
                 'users' => array_map(function($user) {
-                    return $this->normalizeUser($user);
+                    return $user;
                 }, $this->userService->getAllUsers())
             ]);
         } catch (NotAuthorizedException|ExceptionInterface $e) {
             return $this->notAuthorizedResponse();
         }
-    }
-
-    /**
-     * Normalizes a user and removes all non-exposable values.
-     *
-     * @param User $user The initial user
-     * @return array The parsed array with deleted important data
-     * @throws ExceptionInterface If the serialization failed
-     */
-    private function normalizeUser(User $user): array
-    {
-        $parsedUser = $this->serializingService->normalize($user);
-        unset($parsedUser['password']);
-        unset($parsedUser['token']);
-        return $parsedUser;
     }
 }

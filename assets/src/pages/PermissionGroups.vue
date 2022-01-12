@@ -14,9 +14,6 @@
             dark
           >Color</v-chip>
       </template>
-      <template v-slot:item.tables="{item}">
-          {{item.tables.length}}
-      </template>
       <template v-slot:top>
           <v-btn
             color="primary"

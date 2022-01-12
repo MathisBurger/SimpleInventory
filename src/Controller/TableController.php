@@ -19,16 +19,13 @@ class TableController extends DefaultResponsesWithAbstractController
 {
     private TableRequestValidator $validator;
     private TableService $tableService;
-    private SerializingService $serializingService;
 
     public function __construct(
         TableRequestValidator $validator,
         TableService $tableService,
-        SerializingService $serializingService
     ) {
         $this->validator = $validator;
         $this->tableService = $tableService;
-        $this->serializingService = $serializingService;
     }
 
     /**
@@ -44,7 +41,7 @@ class TableController extends DefaultResponsesWithAbstractController
             $table = $this->tableService->createTable($requestContent['tableName']);
             return $this->json([
                 'message' => 'successfully created table',
-                'table' => $this->serializingService->normalize($table)
+                'table' => $table
             ]);
         } catch (NotAuthorizedException|ExceptionInterface $e) {
             return $this->notAuthorizedResponse();
@@ -86,7 +83,7 @@ class TableController extends DefaultResponsesWithAbstractController
             $table = $this->tableService->addElement($requestContent['tableID'], $requestContent['content']);
             return $this->json([
                 'message' => 'successfully added table element',
-                'table' => $this->serializingService->normalize($table)
+                'table' => $table
             ]);
         } catch (NotAuthorizedException $e) {
             return $this->notAuthorizedResponse();
@@ -109,7 +106,7 @@ class TableController extends DefaultResponsesWithAbstractController
             $table = $this->tableService->removeElement($requestContent['elementID']);
             return $this->json([
                 'message' => 'Successfully removed table element',
-                'table' => $this->serializingService->normalize($table)
+                'table' => $table
             ]);
         } catch (NotAuthorizedException $e) {
             return $this->notAuthorizedResponse();
@@ -132,7 +129,7 @@ class TableController extends DefaultResponsesWithAbstractController
             $table = $this->tableService->updateElement($requestContent['elementID'], $requestContent['content']);
             return $this->json([
                 'message' => 'successfully updated table element',
-                'table' => $this->serializingService->normalize($table)
+                'table' => $table
             ]);
         } catch (NotAuthorizedException $e) {
             return $this->notAuthorizedResponse();
@@ -149,7 +146,7 @@ class TableController extends DefaultResponsesWithAbstractController
     {
         try {
             return $this->json([
-                'tables' => $this->serializingService->normalizeArray($this->tableService->getAllTablesForUser())
+                'tables' => $this->tableService->getAllTablesForUser()
             ]);
         } catch (NotAuthorizedException|ExceptionInterface $e) {
             return $this->notAuthorizedResponse();
@@ -168,7 +165,7 @@ class TableController extends DefaultResponsesWithAbstractController
         $requestContent = json_decode($request->getContent(), true);
         try {
             return $this->json([
-                'table' => $this->serializingService->normalize($this->tableService->getTable($requestContent['tableID']))
+                'table' => $this->tableService->getTable($requestContent['tableID'])
             ]);
         } catch (NotAuthorizedException $e) {
             return $this->notAuthorizedResponse();

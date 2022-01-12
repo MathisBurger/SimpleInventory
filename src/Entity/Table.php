@@ -6,10 +6,11 @@ use App\Repository\TableRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 
 #[ORM\Entity(repositoryClass: TableRepository::class)]
 #[ORM\Table(name: '`table`')]
-class Table
+class Table implements JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -70,5 +71,16 @@ class Table
     {
         $this->tableName = $tableName;
         return $this;
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return [
+            'id' => $this->id,
+            'tableName' => $this->tableName,
+            'elements' => array_map(function($element) {
+                return $element->jsonSerializeChild();
+            }, $this->elements->getValues())
+        ];
     }
 }
