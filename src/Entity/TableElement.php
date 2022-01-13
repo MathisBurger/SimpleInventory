@@ -18,6 +18,7 @@ class TableElement implements JsonSerializable
     private array $content = [];
 
     #[ORM\ManyToOne(targetEntity: Table::class, inversedBy: 'elements')]
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?Table $parentTable = null;
 
     public function getId(): ?int

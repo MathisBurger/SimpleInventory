@@ -58,7 +58,7 @@ class PermissionGroupService
             if (null === $table) {
                 throw new NotAuthorizedException('You do not have access to this table');
             }
-            $group->addTable($table);
+            $table->addPermissionGroup($group);
             $this->entityManager->persist($table);
             $this->entityManager->persist($group);
         }

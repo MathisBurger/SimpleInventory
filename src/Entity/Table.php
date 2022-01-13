@@ -20,7 +20,7 @@ class Table implements JsonSerializable
     #[ORM\ManyToMany(targetEntity: PermissionGroups::class, inversedBy: 'tables')]
     private Collection $permissionGroups;
 
-    #[ORM\OneToMany(mappedBy: 'parentTable', targetEntity: TableElement::class)]
+    #[ORM\OneToMany(mappedBy: 'parentTable', targetEntity: TableElement::class, cascade: ['remove'])]
     private Collection $elements;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
