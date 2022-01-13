@@ -41,8 +41,8 @@ class PermissionGroupRequestValidator extends ValidationHandler
     public function validateAddUserRequest(Request $request): bool
     {
         $constraints = new Collection([
-            'groupID' => new Required(new NotBlank()),
-            'userID' => new Required(new NotBlank())
+            'groupID' => new Type('integer'),
+            'userID' => new Type('integer')
         ]);
         return $this->validateRequest($request, $constraints);
     }
@@ -53,8 +53,8 @@ class PermissionGroupRequestValidator extends ValidationHandler
     public function validateRemoveUserRequest(Request $request): bool
     {
         $constraints = new Collection([
-            'groupID' => new Required(new NotBlank()),
-            'userID' => new Required(new NotBlank())
+            'groupID' => new Type('integer'),
+            'userID' => new Type('integer')
         ]);
         return $this->validateRequest($request, $constraints);
     }
@@ -65,8 +65,8 @@ class PermissionGroupRequestValidator extends ValidationHandler
     public function validateAddTableRequest(Request $request): bool
     {
         $constraints = new Collection([
-            'groupID' => new Required(new NotBlank()),
-            'tableID' => new Required(new NotBlank())
+            'groupID' => new Type('integer'),
+            'tableID' => new Type('integer')
         ]);
         return $this->validateRequest($request, $constraints);
     }
@@ -74,8 +74,8 @@ class PermissionGroupRequestValidator extends ValidationHandler
     public function validateRemoveTableRequest(Request $request): bool
     {
         $constraints = new Collection([
-            'groupID' => new Required(new NotBlank()),
-            'tableID' => new Required(new NotBlank())
+            'groupID' => new Type('integer'),
+            'tableID' => new Type('integer')
         ]);
         return $this->validateRequest($request, $constraints);
     }

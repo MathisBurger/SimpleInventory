@@ -14,6 +14,17 @@
             dark
           >Color</v-chip>
       </template>
+      <template v-slot:item.actions="{item}">
+            <v-btn
+                icon
+                @click="() => {
+                    editableObject = item;
+                    updateDialogOpen = true;
+                }"
+            >
+            <v-icon left>mdi-edit</v-icon>
+            </v-btn>
+        </template>
       <template v-slot:top>
           <v-btn
             color="primary"
@@ -39,6 +50,11 @@
         :closeDialog="() => {addDialogOpen = false}"
         :addGroupToList="addGroupToList"
       />
+      <UpdatePermissionGroupDialog 
+        :open="updateDialogOpen"
+        :closeDialog="() => {updateDialogOpen = false}"
+        :userInput="editableObject"
+      />
     </PageLayout>
 </template>
 
@@ -47,11 +63,12 @@
 import { PermissionGroup } from 'assets/typings/PermissionGroup';
 import Vue from 'vue';
 import AddPermissionGroupDialog from '../components/dialog/permissions/AddPermissionGroupDialog.vue';
+import UpdatePermissionGroupDialog from '../components/dialog/permissions/UpdatePermissionGroupDialog.vue';
 import PageLayout from '../components/PageLayout.vue';
 import APIService from '../services/APIService';
 
 export default Vue.extend({
-  components: { PageLayout, AddPermissionGroupDialog },
+  components: { PageLayout, AddPermissionGroupDialog, UpdatePermissionGroupDialog },
    name: 'PermissionGroups',
    data() {
        return {
@@ -59,12 +76,15 @@ export default Vue.extend({
            apiService: new APIService(),
            headers: [
                {text: 'ID', value: 'id'},
+               {text: 'Actions', value: 'actions'},
                {text: 'Name', value: 'name'},
                {text: 'Color', value: 'groupColor'},
                {text: 'Tables', value: 'tables'}
            ],
            addDialogOpen: false,
-           selectedGroups: [] as Array<PermissionGroup>
+           selectedGroups: [] as Array<PermissionGroup>,
+           updateDialogOpen: false,
+           editableObject: {} as any
        };
    },
    methods: {
