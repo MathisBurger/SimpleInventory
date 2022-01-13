@@ -151,6 +151,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSer
         return $this;
     }
 
+    public function removeRole(string $role) {
+        $this->roles = [];
+        foreach($this->roles as $r) {
+            if ($role !== $r) {
+                $this->roles[] = $r;
+            }
+        }
+    }
+
     public function jsonSerialize(): mixed
     {
         return [

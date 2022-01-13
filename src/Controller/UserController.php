@@ -100,4 +100,31 @@ class UserController extends DefaultResponsesWithAbstractController
             return $this->notAuthorizedResponse();
         }
     }
+
+    /**
+     * Updates an user.
+     */
+    #[Route('/api/user/updateUser', methods: Request::METHOD_POST)]
+    public function updateUser(Request $request): Response
+    {
+        if (!$this->validator->validateUpdateUserRequest($request)) {
+            return $this->invalidRequestResponse();
+        }
+        $requestContent = json_decode($request->getContent(), true);
+        try {
+            return $this->json([
+                'message' => 'Successfully updated user',
+                'user' => $this->userService->updateUser(
+                    $requestContent['id'],
+                    $requestContent['username'],
+                    $requestContent['permissionGroups'],
+                    $requestContent['roles']
+                )
+                ]);
+        } catch (NotAuthorizedException $e) {
+            return $this->notAuthorizedResponse();
+        } catch (UserNotFoundException|GroupNotFoundException $e) {
+            return $this->exceptionResponse($e->getMessage());
+        }
+    }
 }

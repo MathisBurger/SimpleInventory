@@ -1,7 +1,7 @@
 import RestService from "./RestService";
 import {LoginResponse} from "../../typings/Responses/LoginResponse";
 import {User} from "../../typings/User";
-import {CreateUserResponse, DeleteUserRespose, GetAllUsersResponse} from "../../typings/Responses/UserControllerResponses";
+import {CreateUserResponse, DeleteUserRespose, GetAllUsersResponse, UpdateUserResponse} from "../../typings/Responses/UserControllerResponses";
 import {CreatePermissionGroupResponse, DeletePermissionGroupResponse, GetAllPermissionGroupsResponse} from "../../typings/Responses/PermissionGroupsControllerResponses";
 import { CreateElementResponse, CreateTableResponse, DeleteTableResponse, GetAllTablesResponse, GetTableResponse, RemoveElementResponse, UpdateElementResponse } from "assets/typings/Responses/TableControllerResponses";
 import { PermissionLevels } from "../permissions";
@@ -182,6 +182,29 @@ export default class APIService extends RestService {
         return await this.post<UpdateElementResponse>('/api/table/updateElement', JSON.stringify({
             elementID,
             content
+        }));
+    }
+
+    /**
+     * Updates an user.
+     * 
+     * @param id The ID of the user that should be updated.
+     * @param username The new username.
+     * @param permissionGroups All permission group IDs the user should have
+     * @param roles All the roles the user should have
+     * @returns The response of the request
+     */
+    public async updateUser(
+        id: number,
+        username: string,
+        permissionGroups: number[],
+        roles: PermissionLevels[]
+    ): Promise<UpdateUserResponse> {
+        return await this.post<UpdateUserResponse>('/api/user/updateUser', JSON.stringify({
+            id: id,
+            username: username,
+            permissionGroups: permissionGroups,
+            roles: roles
         }));
     }
 }
