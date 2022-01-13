@@ -46,6 +46,13 @@
                   multiple
                   v-model="groups"
               ></v-select>
+              <v-select
+                  :items="roles"
+                  label="Roles"
+                  required
+                  multiple
+                  v-model="selectedRoles"
+              ></v-select>
             </v-col>
           </v-row>
         </v-container>
@@ -76,6 +83,7 @@
 </template>
 
 <script lang="ts">
+import { PermissionLevels } from "../../../permissions";
 import Vue from "vue";
 import {PermissionGroup} from "../../../../typings/PermissionGroup";
 import APIService from "../../../services/APIService";
@@ -93,7 +101,13 @@ export default Vue.extend({
       apiService: new APIService(),
       username: '',
       password: '',
-      groups: [] as Array<any>
+      groups: [] as Array<any>,
+      selectedRoles: [] as Array<PermissionLevels>,
+      roles: [
+        PermissionLevels.ROLE_USER,
+        PermissionLevels.ROLE_ADMIN,
+        PermissionLevels.ROLE_MANAGER
+      ]
     };
   },
   methods: {
@@ -108,7 +122,8 @@ export default Vue.extend({
         const resp = await this.apiService.createUser(
             this.username,
             this.password,
-            this.groups
+            this.groups,
+            this.selectedRoles
         );
         if (resp.user) {
           this.addUserToList(resp.user);

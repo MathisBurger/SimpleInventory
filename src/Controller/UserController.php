@@ -42,7 +42,12 @@ class UserController extends DefaultResponsesWithAbstractController
         $requestContent = json_decode($request->getContent(), true);
 
         try {
-            $user = $this->userService->createNewUser($requestContent['username'], $requestContent['password'], $requestContent['permissionGroups']);
+            $user = $this->userService->createNewUser(
+                $requestContent['username'],
+                $requestContent['password'],
+                $requestContent['permissionGroups'],
+                $requestContent['roles']
+                );
 
             return $this->json([
                'message' => 'User created successfully',

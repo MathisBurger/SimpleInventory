@@ -4,6 +4,7 @@ import {User} from "../../typings/User";
 import {CreateUserResponse, DeleteUserRespose, GetAllUsersResponse} from "../../typings/Responses/UserControllerResponses";
 import {CreatePermissionGroupResponse, DeletePermissionGroupResponse, GetAllPermissionGroupsResponse} from "../../typings/Responses/PermissionGroupsControllerResponses";
 import { CreateElementResponse, CreateTableResponse, DeleteTableResponse, GetAllTablesResponse, GetTableResponse, RemoveElementResponse, UpdateElementResponse } from "assets/typings/Responses/TableControllerResponses";
+import { PermissionLevels } from "../permissions";
 
 export default class APIService extends RestService {
 
@@ -59,12 +60,14 @@ export default class APIService extends RestService {
      * @param username The username of the user
      * @param password The password of the user
      * @param permissionGroups All permission group IDs of the user
+     * @param roles All roles the user should have
      */
-    public async createUser(username: string, password: string, permissionGroups: number[]): Promise<CreateUserResponse> {
+    public async createUser(username: string, password: string, permissionGroups: number[], roles: PermissionLevels[]): Promise<CreateUserResponse> {
         return await this.post<CreateUserResponse>('/api/user/createUser', JSON.stringify({
             username,
             password,
-            permissionGroups
+            permissionGroups,
+            roles
         }));
     }
 

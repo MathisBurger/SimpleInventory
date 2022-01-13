@@ -67,7 +67,7 @@ class UserService
      * @throws GroupNotFoundException If the permissionGroup the user should be added to do not exist
      * @throws NotAuthorizedException If the user is not authorized
      */
-    public function createNewUser(string $username, string $password, array $permissionGroups): User
+    public function createNewUser(string $username, string $password, array $permissionGroups, array $roles): User
     {
         if ($this->security->isGranted(UserVoter::CREATE_USER)) {
             $usr = (new User())
@@ -80,6 +80,12 @@ class UserService
                 }
                 $permGroup->addUser($usr);
                 $this->entityManager->persist($permGroup);
+            }
+            if (in_array(User::ROLE_ADMIN, $roles) && !$this->security->isGranted(User::ROLE_ADMIN)) {
+                throw new NotAuthorizedException('You are not authorized for this action');
+            }
+            foreach ($roles as $role) {
+                $usr->addRole($role);
             }
             $this->entityManager->persist($usr);
             $this->entityManager->flush();

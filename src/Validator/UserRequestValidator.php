@@ -20,6 +20,7 @@ class UserRequestValidator extends ValidationHandler
             'username' => new Type('string'),
             'password' => new Type('string'),
             'permissionGroups' => new Type('array'),
+            'roles' => new Type('array')
         ]);
         return $this->validateRequest($request, $constraints);
     }
