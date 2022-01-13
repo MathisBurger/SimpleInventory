@@ -80,7 +80,7 @@ export default Vue.extend({
             const tableID = parseInt('' + this.$route.query.tableID, 10);
             this.tableID = tableID;
             this.elements = (await this.apiService.getTable(tableID)).table?.elements?.map((element) => {
-                return {id: element.id, ...element.content}
+                return {id: 0+element.id, ...element.content}
             }) ?? [];
         },
         addElementToList(element: any) {
@@ -92,6 +92,7 @@ export default Vue.extend({
         },
         async deleteSelectedElements() {
             for (const element of this.selectedElements) {
+                console.log(element);
                 const resp = await this.apiService.removeTableElement(element.id);
                 this.$notify({
                   text: resp.message,
@@ -104,13 +105,15 @@ export default Vue.extend({
         },
 
         rearrangeElements(name: string) {
-            const newElements = this.elements.map((element) => {
-                const copy = Object.assign({}, element);
-                copy[name] = 'empty';
-                return copy;
-            });
-            this.elements = newElements;
-            this.generateHeadersFromElements();
+            if (this.elements.length > 0) {
+                const newElements = this.elements.map((element) => {
+                    const copy = Object.assign({}, element);
+                    copy[name] = 'empty';
+                    return copy;
+                });
+                this.elements = newElements;
+                this.generateHeadersFromElements();
+            }
         }
     },
     async mounted() {

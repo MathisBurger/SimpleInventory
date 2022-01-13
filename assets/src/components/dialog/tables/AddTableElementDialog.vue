@@ -104,8 +104,10 @@ export default Vue.extend({
               }
         },
         addField(name: string) {
+          if (this.objectKeys.length > 0) {
+            this.rearrangeRows(name);
+          }
           this.objectKeys.push(name);
-          this.rearrangeRows(name);
         }
     }
 });
