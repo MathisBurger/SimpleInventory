@@ -2,7 +2,6 @@
   <v-card
       min-height="90vh"
       width="256"
-      style="margin-top: 10px;"
       class="mx-auto"
       tile
       outlined

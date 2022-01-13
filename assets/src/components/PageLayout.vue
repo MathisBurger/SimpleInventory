@@ -1,10 +1,10 @@
 <template>
   <v-container fluid>
-    <v-row dense align="flex-start" no-gutters>
+    <v-row dense align="flex-start">
       <v-col md="2">
         <Navbar />
       </v-col>
-      <v-col md="9">
+      <v-col md="10">
         <v-card raised outlined>
           <v-card-title>{{title}}</v-card-title>
           <slot />
