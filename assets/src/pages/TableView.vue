@@ -85,6 +85,9 @@ export default Vue.extend({
         addElementToList(element: any) {
             this.elements.push(element);
             this.fetchTableElements();
+            if (this.headers.length === 0) {
+                this.generateHeadersFromElements();
+            }
         },
         async deleteSelectedElements() {
             for (const element of this.selectedElements) {

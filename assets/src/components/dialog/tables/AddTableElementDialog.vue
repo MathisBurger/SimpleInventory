@@ -26,6 +26,14 @@
             </v-col>
           </v-row>
         </v-container>
+        <v-btn
+            color="blue darken-1"
+            text
+            @click="fieldDialogOpen = true"
+        >
+        <v-icon left>mdi-plus</v-icon>
+          Add Field
+        </v-btn>
         <small>*indicates required field</small>
       </v-card-text>
       <v-card-actions>
@@ -48,6 +56,11 @@
         </v-btn>
       </v-card-actions>
     </v-card>
+    <AddTableElementFieldDialog 
+      :open="fieldDialogOpen"
+      :addField="addField"
+      :closeDialog="() => {fieldDialogOpen = false}"
+    />
   </v-dialog>
 </template>
 
@@ -55,13 +68,16 @@
 <script lang="ts">
 import APIService from '../../../services/APIService';
 import Vue from 'vue';
+import AddTableElementFieldDialog from './AddTableElementFieldDialog.vue';
 
 export default Vue.extend({
+  components: { AddTableElementFieldDialog },
     name: "AddTableElementDialog",
     data() {
         return {
             apiService: new APIService(),
-            input: {} as any
+            input: {} as any,
+            fieldDialogOpen: false,
         }
     },
     props: {
@@ -84,6 +100,9 @@ export default Vue.extend({
                 this.addElementToList(this.input);
                 this.closeDialog();
               }
+        },
+        addField(name: string) {
+          this.objectKeys.push(name);
         }
     }
 });
