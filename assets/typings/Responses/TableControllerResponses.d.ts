@@ -27,3 +27,8 @@ export interface RemoveElementResponse {
     message: string;
     table?: Table;
 }
+
+export interface UpdateElementResponse {
+    message: string;
+    table?: Table;
+}

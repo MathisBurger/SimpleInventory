@@ -62,8 +62,8 @@ class TableRequestValidator extends ValidationHandler
     public function validateUpdateElementRequest(Request $request): bool
     {
         $constraints = new Collection([
-            'elementID' => new Required(new NotBlank()),
-            'content' => new Required(new NotBlank())
+            'elementID' => new Type('integer'),
+            'content' => new Type('array')
         ]);
         return $this->validateRequest($request, $constraints);
     }

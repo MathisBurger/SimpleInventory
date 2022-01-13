@@ -3,7 +3,7 @@ import {LoginResponse} from "../../typings/Responses/LoginResponse";
 import {User} from "../../typings/User";
 import {CreateUserResponse, DeleteUserRespose, GetAllUsersResponse} from "../../typings/Responses/UserControllerResponses";
 import {CreatePermissionGroupResponse, DeletePermissionGroupResponse, GetAllPermissionGroupsResponse} from "../../typings/Responses/PermissionGroupsControllerResponses";
-import { CreateElementResponse, CreateTableResponse, DeleteTableResponse, GetAllTablesResponse, GetTableResponse, RemoveElementResponse } from "assets/typings/Responses/TableControllerResponses";
+import { CreateElementResponse, CreateTableResponse, DeleteTableResponse, GetAllTablesResponse, GetTableResponse, RemoveElementResponse, UpdateElementResponse } from "assets/typings/Responses/TableControllerResponses";
 
 export default class APIService extends RestService {
 
@@ -165,6 +165,20 @@ export default class APIService extends RestService {
     public async removeTableElement(elementID: number): Promise<RemoveElementResponse> {
         return await this.post<RemoveElementResponse>('/api/table/removeElement', JSON.stringify({
             elementID
+        }));
+    }
+
+    /**
+     * Updates an element in a table.
+     * 
+     * @param elementID The ID of the element that should be updated
+     * @param content The new content of the element
+     * @returns  The response of the request
+     */
+    public async updateTableElement(elementID: number, content: any): Promise<UpdateElementResponse> {
+        return await this.post<UpdateElementResponse>('/api/table/updateElement', JSON.stringify({
+            elementID,
+            content
         }));
     }
 }

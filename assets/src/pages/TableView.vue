@@ -9,6 +9,17 @@
             :dense="elements.length > 10"
             v-model="selectedElements"
         >
+        <template v-slot:item.actions="{item}">
+            <v-btn
+                icon
+                @click="() => {
+                    editableObject = item;
+                    updateDialogOpen = true;
+                }"
+            >
+            <v-icon left>mdi-edit</v-icon>
+            </v-btn>
+        </template>
         <template v-slot:top>
             <v-btn
             color="primary"
@@ -36,9 +47,14 @@
             :addElementToList="addElementToList"
             :tableID="tableID"
             :rearrangeRows="rearrangeElements"
-        >
-
-        </AddTableElementDialog>
+        />
+        <UpdateTableElementDialog 
+            :open="updateDialogOpen"
+            :closeDialog="() => {updateDialogOpen = false}"
+            :updateTableElement="updateTableElement"
+            :object="editableObject"
+            :tableID="tableID"
+        />
     </PageLayout>
 </template>
 
@@ -47,27 +63,33 @@ import Vue from 'vue';
 import PageLayout from "../components/PageLayout.vue";
 import AddTableElementDialog from "../components/dialog/tables/AddTableElementDialog.vue";
 import APIService from '../services/APIService';
+import UpdateTableElementDialog from '../components/dialog/tables/UpdateTableElementDialog.vue';
 
 export default Vue.extend({
     name: "TableView",
-    components: {PageLayout, AddTableElementDialog},
+    components: {PageLayout, AddTableElementDialog, UpdateTableElementDialog},
     data() {
         return {
             elements: [] as Array<any>,
             headers: [] as Array<any>,
             apiService: new APIService(),
             addDialogOpen: false,
+            updateDialogOpen: false,
             tableID: 0,
-            selectedElements: [] as Array<any>
+            selectedElements: [] as Array<any>,
+            editableObject: {} as any
         }
     },
     methods: {
         generateHeadersFromElements() {
             if (this.elements.length > 0) {
-                this.headers = this.getObjectKeys().map((content) => ({
+                this.headers = [
+                    {text: 'Actions', value: 'actions'},
+                    ...this.getObjectKeys().map((content) => ({
                     text: content,
                     value: content
-                }));
+                }))
+                ];
             }
         },
         getObjectKeys(): string[] {
@@ -84,7 +106,6 @@ export default Vue.extend({
             }) ?? [];
         },
         addElementToList(element: any) {
-            this.elements.push(element);
             this.fetchTableElements();
             if (this.headers.length === 0) {
                 this.generateHeadersFromElements();
@@ -114,6 +135,9 @@ export default Vue.extend({
                 this.elements = newElements;
                 this.generateHeadersFromElements();
             }
+        },
+        updateTableElement() {
+            this.fetchTableElements();
         }
     },
     async mounted() {
