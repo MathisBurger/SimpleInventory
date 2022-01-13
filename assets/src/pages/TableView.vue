@@ -6,6 +6,7 @@
             class="elevation-1"
             show-select
             calculate-widths
+            :dense="elements.length > 10"
         >
         </v-data-table>
     </PageLayout>
