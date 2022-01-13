@@ -7,6 +7,7 @@
           show-select
           calculate-widths
           v-model="selectedTables"
+          @click:row="redirectTable"
         >
         <template v-slot:item.elements="{item}">
           {{item.elements.length}}
@@ -80,6 +81,9 @@ export default Vue.extend({
     },
     addTable(table: Table) {
       this.tables.push(table);
+    },
+    async redirectTable(row: Table) {
+      await this.$router.push('/table-view?tableID=' + row.id);
     }
   }
 });

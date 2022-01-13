@@ -12,3 +12,8 @@ export interface CreateTableResponse {
 export interface DeleteTableResponse {
     message: string;
 }
+
+export interface GetTableResponse {
+    message?: string;
+    table?: Table;
+}

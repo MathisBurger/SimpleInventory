@@ -3,7 +3,7 @@ import {LoginResponse} from "../../typings/Responses/LoginResponse";
 import {User} from "../../typings/User";
 import {CreateUserResponse, DeleteUserRespose, GetAllUsersResponse} from "../../typings/Responses/UserControllerResponses";
 import {CreatePermissionGroupResponse, DeletePermissionGroupResponse, GetAllPermissionGroupsResponse} from "../../typings/Responses/PermissionGroupsControllerResponses";
-import { CreateTableResponse, DeleteTableResponse, GetAllTablesResponse } from "assets/typings/Responses/TableControllerResponses";
+import { CreateTableResponse, DeleteTableResponse, GetAllTablesResponse, GetTableResponse } from "assets/typings/Responses/TableControllerResponses";
 
 export default class APIService extends RestService {
 
@@ -127,6 +127,18 @@ export default class APIService extends RestService {
     public async deleteTable(id: number): Promise<DeleteTableResponse> {
         return await this.post<DeleteTableResponse>('/api/table/deleteTable', JSON.stringify({
             tableID: id,
+        }));
+    }
+
+    /**
+     * Fetches an specific table from the server.
+     * 
+     * @param id The id of the table that should be fetched
+     * @returns The response of the request
+     */
+    public async getTable(id: number): Promise<GetTableResponse> {
+        return await this.post<GetTableResponse>('/api/table/getTable', JSON.stringify({
+            tableID: id
         }));
     }
 }

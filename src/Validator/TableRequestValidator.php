@@ -75,7 +75,7 @@ class TableRequestValidator extends ValidationHandler
     public function validateGetTableRequest(Request $request): bool
     {
         $constraints = new Collection([
-            'tableID' => new Required(new NotBlank())
+            'tableID' => new Type('integer')
         ]);
         return $this->validateRequest($request, $constraints);
     }
