@@ -39,8 +39,8 @@ class TableRequestValidator extends ValidationHandler
     public function validateAddElementRequest(Request $request): bool
     {
         $constraints = new Collection([
-            'tableID' => new Required(new NotBlank()),
-            'content' => new Required(new NotBlank())
+            'tableID' => new Type('integer'),
+            'content' => new Type('array')
         ]);
         return $this->validateRequest($request, $constraints);
     }
@@ -51,8 +51,7 @@ class TableRequestValidator extends ValidationHandler
     public function validateRemoveElementRequest(Request $request): bool
     {
         $constraints = new Collection([
-            'elementID' => new Required(new NotBlank()),
-            'content' => new Required(new NotBlank())
+            'elementID' => new Type('integer')
         ]);
         return $this->validateRequest($request, $constraints);
     }

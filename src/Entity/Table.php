@@ -79,7 +79,7 @@ class Table implements JsonSerializable
             'id' => $this->id,
             'tableName' => $this->tableName,
             'elements' => array_map(function($element) {
-                return $element->getContent();
+                return ['id' => $element->getId(), 'content' => $element->getContent()];
             }, $this->elements->getValues())
         ];
     }

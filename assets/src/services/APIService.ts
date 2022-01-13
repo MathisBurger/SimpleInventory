@@ -3,7 +3,7 @@ import {LoginResponse} from "../../typings/Responses/LoginResponse";
 import {User} from "../../typings/User";
 import {CreateUserResponse, DeleteUserRespose, GetAllUsersResponse} from "../../typings/Responses/UserControllerResponses";
 import {CreatePermissionGroupResponse, DeletePermissionGroupResponse, GetAllPermissionGroupsResponse} from "../../typings/Responses/PermissionGroupsControllerResponses";
-import { CreateTableResponse, DeleteTableResponse, GetAllTablesResponse, GetTableResponse } from "assets/typings/Responses/TableControllerResponses";
+import { CreateElementResponse, CreateTableResponse, DeleteTableResponse, GetAllTablesResponse, GetTableResponse, RemoveElementResponse } from "assets/typings/Responses/TableControllerResponses";
 
 export default class APIService extends RestService {
 
@@ -139,6 +139,32 @@ export default class APIService extends RestService {
     public async getTable(id: number): Promise<GetTableResponse> {
         return await this.post<GetTableResponse>('/api/table/getTable', JSON.stringify({
             tableID: id
+        }));
+    }
+
+    /**
+     * Creates a new table element on the table with the given ID.
+     * 
+     * @param tableID The ID of the table the element should be added to
+     * @param content The content of the element as json
+     * @returns The response of the request
+     */
+    public async createTableElement(tableID: number, content: any): Promise<CreateElementResponse> {
+        return await this.post<CreateElementResponse>('/api/table/addElement',  JSON.stringify({
+            tableID,
+            content,
+        }));
+    }
+
+    /**
+     * Deletes an element from a table. 
+     * 
+     * @param elementID The ID of the element that should be deleted
+     * @returns The response of the request
+     */
+    public async removeTableElement(elementID: number): Promise<RemoveElementResponse> {
+        return await this.post<RemoveElementResponse>('/api/table/removeElement', JSON.stringify({
+            elementID
         }));
     }
 }

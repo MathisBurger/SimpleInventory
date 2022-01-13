@@ -17,3 +17,13 @@ export interface GetTableResponse {
     message?: string;
     table?: Table;
 }
+
+export interface CreateElementResponse {
+    message: string;
+    table?: Table;
+}
+
+export interface RemoveElementResponse {
+    message: string;
+    table?: Table;
+}
