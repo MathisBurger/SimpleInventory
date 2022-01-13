@@ -85,7 +85,8 @@ export default Vue.extend({
         closeDialog: Function,
         addElementToList: Function,
         objectKeys: Array,
-        tableID: Number
+        tableID: Number,
+        rearrangeRows: Function
     },    
     methods: {
         async addElement() {
@@ -98,11 +99,13 @@ export default Vue.extend({
               });
               if (resp.table) {
                 this.addElementToList(this.input);
+
                 this.closeDialog();
               }
         },
         addField(name: string) {
           this.objectKeys.push(name);
+          this.rearrangeRows(name);
         }
     }
 });

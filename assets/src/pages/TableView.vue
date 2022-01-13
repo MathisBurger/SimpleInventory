@@ -35,6 +35,7 @@
             :objectKeys="getObjectKeys()"
             :addElementToList="addElementToList"
             :tableID="tableID"
+            :rearrangeRows="rearrangeElements"
         >
 
         </AddTableElementDialog>
@@ -100,6 +101,16 @@ export default Vue.extend({
               });
             }
             await this.fetchTableElements();
+        },
+
+        rearrangeElements(name: string) {
+            const newElements = this.elements.map((element) => {
+                const copy = Object.assign({}, element);
+                copy[name] = 'empty';
+                return copy;
+            });
+            this.elements = newElements;
+            this.generateHeadersFromElements();
         }
     },
     async mounted() {
