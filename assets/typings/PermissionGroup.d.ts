@@ -3,10 +3,15 @@ export interface PermissionGroupUserType {
     name: string;
 }
 
+export interface PermissionGroupTableType {
+    id: number;
+    name: string;
+}
+
 export interface PermissionGroup {
     id: number;
     name: string;
     groupColor: string;
-    tables: number;
+    tables: PermissionGroupTableType[];
     users: PermissionGroupUserType[];
 }

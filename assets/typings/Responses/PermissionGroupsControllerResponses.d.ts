@@ -20,3 +20,11 @@ export interface RemoveUserFromPermissionGroupResponse {
 export interface AddUserToPermissionGroupResponse {
     message: string;
 }
+
+export interface AddTableToPermissionGroupResponse {
+    message: string;
+}
+
+export interface RemoveTableFromPermissionGroupResponse {
+    message: string;
+}

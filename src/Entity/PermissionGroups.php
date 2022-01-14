@@ -104,7 +104,12 @@ class PermissionGroups implements JsonSerializable
             'id' => $this->id,
             'name' => $this->name,
             'groupColor' => $this->groupColor,
-            'tables' => count($this->tables->getValues()),
+            'tables' => array_map(function($table) {
+                return [
+                    'id' => $table->getId(),
+                    'name' => $table->getTableName()
+                ];
+            }, $this->tables->getValues()),
             'users' => array_map(function($user) {
                 return [
                     'id' => $user->getId(),

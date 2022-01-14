@@ -162,7 +162,7 @@ class PermissionGroupService
         if ($table === null || $group === null) {
             throw new GroupNotFoundException('The group or table does not exist');
         }
-        $group->addTable($table);
+        $table->addPermissionGroup($group);
         $this->entityManager->persist($group);
         $this->entityManager->persist($table);
         $this->entityManager->flush();

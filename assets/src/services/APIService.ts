@@ -2,7 +2,7 @@ import RestService from "./RestService";
 import {LoginResponse} from "../../typings/Responses/LoginResponse";
 import {User} from "../../typings/User";
 import {CreateUserResponse, DeleteUserRespose, GetAllUsersResponse, UpdateUserResponse} from "../../typings/Responses/UserControllerResponses";
-import {AddUserToPermissionGroupResponse, CreatePermissionGroupResponse, DeletePermissionGroupResponse, GetAllPermissionGroupsResponse, RemoveUserFromPermissionGroupResponse} from "../../typings/Responses/PermissionGroupsControllerResponses";
+import {AddTableToPermissionGroupResponse, AddUserToPermissionGroupResponse, CreatePermissionGroupResponse, DeletePermissionGroupResponse, GetAllPermissionGroupsResponse, RemoveTableFromPermissionGroupResponse, RemoveUserFromPermissionGroupResponse} from "../../typings/Responses/PermissionGroupsControllerResponses";
 import { CreateElementResponse, CreateTableResponse, DeleteTableResponse, GetAllTablesResponse, GetTableResponse, RemoveElementResponse, UpdateElementResponse } from "assets/typings/Responses/TableControllerResponses";
 import { PermissionLevels } from "../permissions";
 
@@ -239,6 +239,40 @@ export default class APIService extends RestService {
         return await this.post<AddUserToPermissionGroupResponse>(
             '/api/permission-group/addUser',
             JSON.stringify({groupID, userID})
+        );
+    }
+
+    /**
+     * Adds an table to a permission-group.
+     * 
+     * @param groupID The ID of the group that the table should be added to
+     * @param tableID The ID of the table that should be added
+     * @returns The response of the request
+     */
+    public async addTableToPermissionGroup(
+        groupID: number,
+        tableID: number
+    ): Promise<AddTableToPermissionGroupResponse> {
+        return await this.post<AddUserToPermissionGroupResponse>(
+            '/api/permission-group/addTable',
+            JSON.stringify({groupID, tableID})
+        );
+    }
+
+    /**
+     * Removes an table from a permission-group.
+     * 
+     * @param groupID The ID of the group the table should be added to
+     * @param tableID The ID of the tabel that should be added.
+     * @returns The response of the request
+     */
+    public async removeTableFromPermissionGroup(
+        groupID: number,
+        tableID: number
+    ): Promise<RemoveTableFromPermissionGroupResponse> {
+        return await this.post<RemoveTableFromPermissionGroupResponse>(
+            '/api/permission-group/removeTable',
+            JSON.stringify({groupID, tableID})
         );
     }
 }

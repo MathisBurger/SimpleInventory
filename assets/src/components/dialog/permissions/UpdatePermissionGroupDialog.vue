@@ -25,10 +25,19 @@
             </v-col>
             <v-col
                 cols="12"
-                sm="12"
-                md="12"
+                sm="6"
+                md="6"
             >
               <PermissionGroupUserCard 
+                :permissionGroup="userInput"
+              />
+            </v-col>
+            <v-col
+                cols="12"
+                sm="6"
+                md="6"
+            >
+              <PermissionGroupTableCard 
                 :permissionGroup="userInput"
               />
             </v-col>
@@ -54,10 +63,11 @@
 import APIService from '../.././../services/APIService';
 import PermissionGroupUserCard from '../../cards/permissions/PermissionGroupUserCard.vue';
 import Vue from 'vue';
+import PermissionGroupTableCard from '../../cards/permissions/PermissionGroupTableCard.vue';
 
 export default Vue.extend({
  name: "UpdateUserDialog",
- components: {PermissionGroupUserCard},
+ components: {PermissionGroupUserCard, PermissionGroupTableCard},
   props: {
     open: Boolean,
     closeDialog: Function,

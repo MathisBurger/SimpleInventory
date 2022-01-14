@@ -4,9 +4,9 @@
         max-width="250"
     >
         <v-list dense>
-            <v-subheader>Users</v-subheader>
+            <v-subheader>Tables</v-subheader>
                 <v-list-item
-                    v-for="(item, key) in permissionGroup.users"
+                    v-for="(item, key) in permissionGroup.tables"
                     :key="key"
                 >
                     <v-list-item-content>
@@ -16,7 +16,7 @@
                         <v-btn
                             color="primary"
                             icon
-                            @click="() => removeUser(item.id)"
+                            @click="() => removeTable(item.id)"
                         >
                             <v-icon left>mdi-minus</v-icon>
                         </v-btn>
@@ -32,16 +32,16 @@
                                     v-on="on"
                                 >
                                     <v-icon left>mdi-plus</v-icon>
-                                    Add user                            
+                                    Add table                            
                                 </v-btn>
                             </template>
-                            <v-list v-if="unaddedUsers.length > 0">
+                            <v-list v-if="unaddedTables.length > 0">
                                 <v-list-item
-                                    v-for="(user, key) in unaddedUsers"
+                                    v-for="(table, key) in unaddedTables"
                                     :key="key"
-                                    @click="() => addUser(user.id, user.name)"
+                                    @click="() => addTable(table.id, table.name)"
                                 >
-                                    <v-list-item-title v-text="user.name" />
+                                    <v-list-item-title v-text="table.name" />
                                 </v-list-item>
                             </v-list>
                         </v-menu>
@@ -50,46 +50,47 @@
     </v-card>
 </template>
 
+
 <script lang="ts">
 import APIService from '../../../services/APIService';
+import { PermissionGroupTableType } from '../../../../typings/PermissionGroup';
 import Vue from 'vue';
-import { PermissionGroupUserType } from 'assets/typings/PermissionGroup';
-import { User } from 'assets/typings/User';
+import { Table } from 'assets/typings/Table';
 
 export default Vue.extend({
-    name: "PermissionGroupUserCard",
-    data() {
+   name: "PermissionGroupTableCard",
+   data() {
         return {
             apiService: new APIService(),
-            unaddedUsers: [] as Array<PermissionGroupUserType>,
+            unaddedTables: [] as Array<PermissionGroupTableType>,
         };
     },
     methods: {
-        async fetchUnaddedUsers() {
-            const users = (await this.apiService.getAllUsers()).users;
-            const existingIDs = this.permissionGroup.users.map((u: PermissionGroupUserType) => u.id);
-            const unaddeeUsers: PermissionGroupUserType[] = [];
-            users.forEach((user: User) => {
-                if (existingIDs.indexOf(user.id ?? -1) < 0) {
-                    unaddeeUsers.push({
-                        id: user.id ?? -1,
-                        name: user.userIdentifier
+        async fetchUnaddedTables() {
+            const tables = (await this.apiService.getAllTables()).tables;
+            const existingIDs = this.permissionGroup.tables.map((t: PermissionGroupTableType) => t.id);
+            const unaddedTables: PermissionGroupTableType[] = [];
+            tables.forEach((table: Table) => {
+                if (existingIDs.indexOf(table.id ?? -1) < 0) {
+                    unaddedTables.push({
+                        id: table.id ?? -1,
+                        name: table.tableName
                     });
                 }
             });
-            this.unaddedUsers = unaddeeUsers;
+            this.unaddedTables = unaddedTables;
         },
-        async removeUser(id: number) {
+        async removeTable(id: number) {
             try {
-                const resp = await this.apiService.removeUserFromPermissionGroups(this.permissionGroup.id ?? -1, id);
-                this.permissionGroup.users = this.permissionGroup.users.filter((e: any) => e.id !== id);
+                const resp = await this.apiService.removeTableFromPermissionGroup(this.permissionGroup.id ?? -1, id);
+                this.permissionGroup.tables = this.permissionGroup.tables.filter((e: any) => e.id !== id);
                 this.$notify({
                   text: resp.message,
                   type: 'success',
                   group: 'main',
                   title: 'Permission-Group'
                 });
-                await this.fetchUnaddedUsers();
+                await this.fetchUnaddedTables();
             } catch (e: any) {
                 this.$notify({
                   text: e,
@@ -100,10 +101,10 @@ export default Vue.extend({
             }
 
         },
-        async addUser(id: number, name: string) {
+        async addTable(id: number, name: string) {
             try {
-                const resp = await this.apiService.addUserToPermissionGroup(this.permissionGroup.id ?? -1, id);
-                this.permissionGroup.users.push({
+                const resp = await this.apiService.addTableToPermissionGroup(this.permissionGroup.id ?? -1, id);
+                this.permissionGroup.tables.push({
                     id,
                     name,
                 });
@@ -113,7 +114,7 @@ export default Vue.extend({
                   group: 'main',
                   title: 'Permission-Group'
                 });
-                await this.fetchUnaddedUsers();
+                await this.fetchUnaddedTables();
             } catch (e: any) {
                 this.$notify({
                   text: e,
@@ -128,7 +129,7 @@ export default Vue.extend({
         permissionGroup: Object
     },
     async mounted() {
-        await this.fetchUnaddedUsers();
-    }
-})
+        await this.fetchUnaddedTables();
+    } 
+});
 </script>
