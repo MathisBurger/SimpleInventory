@@ -2,7 +2,7 @@ import RestService from "./RestService";
 import {LoginResponse} from "../../typings/Responses/LoginResponse";
 import {User} from "../../typings/User";
 import {CreateUserResponse, DeleteUserRespose, GetAllUsersResponse, UpdateUserResponse} from "../../typings/Responses/UserControllerResponses";
-import {CreatePermissionGroupResponse, DeletePermissionGroupResponse, GetAllPermissionGroupsResponse} from "../../typings/Responses/PermissionGroupsControllerResponses";
+import {AddUserToPermissionGroupResponse, CreatePermissionGroupResponse, DeletePermissionGroupResponse, GetAllPermissionGroupsResponse, RemoveUserFromPermissionGroupResponse} from "../../typings/Responses/PermissionGroupsControllerResponses";
 import { CreateElementResponse, CreateTableResponse, DeleteTableResponse, GetAllTablesResponse, GetTableResponse, RemoveElementResponse, UpdateElementResponse } from "assets/typings/Responses/TableControllerResponses";
 import { PermissionLevels } from "../permissions";
 
@@ -206,5 +206,39 @@ export default class APIService extends RestService {
             permissionGroups: permissionGroups,
             roles: roles
         }));
+    }
+
+    /**
+     * Removes an user from a permissionGroup.
+     * 
+     * @param groupID The ID of the group the user should be removed from
+     * @param userID The ID of the user that should be removed
+     * @returns The response of the request
+     */
+    public async removeUserFromPermissionGroups(
+        groupID: number,
+        userID: number
+    ): Promise<RemoveUserFromPermissionGroupResponse> {
+        return await this.post<RemoveUserFromPermissionGroupResponse>(
+            '/api/permission-group/removeUser',
+            JSON.stringify({groupID, userID})
+        );
+    }
+
+    /**
+     * Adds an user to the permission group.
+     * 
+     * @param groupID The ID of the group, the user should be added to
+     * @param userID The ID of the user that should be added
+     * @returns The response of the request
+     */
+    public async addUserToPermissionGroup(
+        groupID: number,
+        userID: number
+    ): Promise<AddUserToPermissionGroupResponse> {
+        return await this.post<AddUserToPermissionGroupResponse>(
+            '/api/permission-group/addUser',
+            JSON.stringify({groupID, userID})
+        );
     }
 }

@@ -13,8 +13,8 @@
           <v-row>
             <v-col
                 cols="12"
-                sm="6"
-                md="6"
+                sm="12"
+                md="12"
             >
               <v-text-field
                   label="Name"
@@ -22,6 +22,15 @@
                   v-model="userInput.name"
                   disabled
               ></v-text-field>
+            </v-col>
+            <v-col
+                cols="12"
+                sm="12"
+                md="12"
+            >
+              <PermissionGroupUserCard 
+                :permissionGroup="userInput"
+              />
             </v-col>
           </v-row>
         </v-container>
@@ -36,15 +45,6 @@
         >
           Close
         </v-btn>
-        <v-btn
-            color="blue darken-1"
-            text
-            @click="() => {
-              closeDialog();
-            }"
-        >
-          Create
-        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -52,10 +52,12 @@
 
 <script lang="ts">
 import APIService from '../.././../services/APIService';
+import PermissionGroupUserCard from '../../cards/permissions/PermissionGroupUserCard.vue';
 import Vue from 'vue';
 
 export default Vue.extend({
  name: "UpdateUserDialog",
+ components: {PermissionGroupUserCard},
   props: {
     open: Boolean,
     closeDialog: Function,

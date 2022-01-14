@@ -12,3 +12,11 @@ export interface CreatePermissionGroupResponse {
 export interface DeletePermissionGroupResponse {
     message: string;
 }
+
+export interface RemoveUserFromPermissionGroupResponse {
+    message: string;
+}
+
+export interface AddUserToPermissionGroupResponse {
+    message: string;
+}

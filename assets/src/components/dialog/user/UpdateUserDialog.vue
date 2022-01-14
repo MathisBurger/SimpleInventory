@@ -63,7 +63,7 @@
               closeDialog();
             }"
         >
-          Create
+          Update
         </v-btn>
       </v-card-actions>
     </v-card>
