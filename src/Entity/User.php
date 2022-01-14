@@ -7,12 +7,13 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JetBrains\PhpStorm\Pure;
+use JsonSerializable;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSerializable
 {
     public const ROLE_USER = 'ROLE_USER';
     public const ROLE_MANAGER = 'ROLE_MANAGER';
@@ -148,5 +149,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->roles[] = $role;
         return $this;
+    }
+
+    public function removeRole(string $role) {
+        $this->roles = [];
+        foreach($this->roles as $r) {
+            if ($role !== $r) {
+                $this->roles[] = $r;
+            }
+        }
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return [
+            'id' => $this->id,
+            'roles' => $this->roles,
+            'userIdentifier' => $this->username,
+            'permissionGroups' => $this->permissionGroups->getValues()
+        ];
     }
 }

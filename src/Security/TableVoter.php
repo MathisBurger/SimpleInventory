@@ -4,6 +4,7 @@ namespace App\Security;
 
 use App\Entity\Table;
 use App\Entity\User;
+use App\Repository\TableRepository;
 use JetBrains\PhpStorm\Pure;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -19,10 +20,12 @@ class TableVoter extends Voter
     public const VIEW_TABLE = 'VIEW_TABLE';
 
     private Security $security;
+    private TableRepository $tableRepository;
 
-    public function __construct(Security $security)
+    public function __construct(Security $security, TableRepository $tableRepository)
     {
         $this->security = $security;
+        $this->tableRepository = $tableRepository;
     }
 
     protected function supports(string $attribute, mixed $subject): bool
@@ -50,6 +53,10 @@ class TableVoter extends Voter
         if (!$loggedInUser instanceof User) {
             // User must be logged in
             return false;
+        }
+
+        if ($this->security->isGranted(User::ROLE_ADMIN)) {
+            return true;
         }
 
         /* @var $table Table */
@@ -82,15 +89,6 @@ class TableVoter extends Voter
      */
     #[Pure] private function canAddElement(User $user, Table $table): bool
     {
-        $exists = false;
-        foreach ($user->getPermissionGroups() as $permissionGroup) {
-            foreach ($permissionGroup->getTables() as $permTable) {
-                if ($permTable->getId() === $table->getId()) {
-                    $exists = true;
-                    break;
-                }
-            }
-        }
-        return $exists;
+        return in_array($table, $this->tableRepository->findAllForUser($user));
     }
 }

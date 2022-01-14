@@ -2,7 +2,6 @@
   <v-card
       min-height="90vh"
       width="256"
-      style="margin-top: 10px;"
       class="mx-auto"
       tile
       outlined
@@ -43,10 +42,14 @@ export default {
     const storage = new StorageService();
     let listItems = [
       {title: 'Dashboard', icon: 'mdi-home', redirect: '/dashboard'},
+      {title: 'Tables', icon: 'mdi-table', redirect: '/tables'},
     ];
 
     if ((storage.getActiveUser()?.roles ?? []).indexOf(PermissionLevels.ROLE_ADMIN) > -1) {
-      listItems.push({title: 'Users', icon: 'mdi-account', redirect: '/user-management'});
+      listItems.push(
+        {title: 'Users', icon: 'mdi-account', redirect: '/user-management'},
+        {title: 'Groups', icon: 'mdi-account-box-multiple', redirect: '/permission-groups'}
+        );
     }
     return {
       items: listItems

@@ -7,7 +7,6 @@ use App\Exception\GroupNotFoundException;
 use App\Exception\NotAuthorizedException;
 use App\Exception\UserNotFoundException;
 use App\Service\PermissionGroupService;
-use App\Service\SerializingService;
 use App\Validator\PermissionGroupRequestValidator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,16 +20,13 @@ class PermissionGroupController extends DefaultResponsesWithAbstractController
 {
     private PermissionGroupRequestValidator $validator;
     private PermissionGroupService $permissionGroupService;
-    private SerializingService $serializingService;
 
     public function __construct(
         PermissionGroupRequestValidator $validator,
-        PermissionGroupService $permissionGroupService,
-        SerializingService $serializingService
+        PermissionGroupService $permissionGroupService
     ) {
         $this->validator = $validator;
         $this->permissionGroupService = $permissionGroupService;
-        $this->serializingService = $serializingService;
     }
 
     /**
@@ -44,10 +40,14 @@ class PermissionGroupController extends DefaultResponsesWithAbstractController
         }
         $requestContent = json_decode($request->getContent(), true);
         try {
-            $group = $this->permissionGroupService->createPermissionGroup($requestContent['name'], $requestContent['groupColor']);
+            $group = $this->permissionGroupService->createPermissionGroup(
+                $requestContent['name'],
+                $requestContent['groupColor'], 
+                $requestContent['tables']
+            );
             return $this->json([
                 'message' => 'Successfully created new permission group',
-                'group' => $this->serializingService->normalize($group)
+                'group' => $group,
             ]);
         } catch (NotAuthorizedException|ExceptionInterface $e) {
             return $this->notAuthorizedResponse();
@@ -173,7 +173,7 @@ class PermissionGroupController extends DefaultResponsesWithAbstractController
     {
         try {
             return $this->json([
-                'groups' => $this->serializingService->normalizeArray($this->permissionGroupService->getAllGroups())
+                'groups' => $this->permissionGroupService->getAllGroups()
             ]);
         } catch (NotAuthorizedException|ExceptionInterface $e) {
             return $this->notAuthorizedResponse();

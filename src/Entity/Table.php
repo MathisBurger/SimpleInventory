@@ -6,10 +6,11 @@ use App\Repository\TableRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 
 #[ORM\Entity(repositoryClass: TableRepository::class)]
 #[ORM\Table(name: '`table`')]
-class Table
+class Table implements JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -19,7 +20,7 @@ class Table
     #[ORM\ManyToMany(targetEntity: PermissionGroups::class, inversedBy: 'tables')]
     private Collection $permissionGroups;
 
-    #[ORM\OneToMany(mappedBy: 'parentTable', targetEntity: TableElement::class)]
+    #[ORM\OneToMany(mappedBy: 'parentTable', targetEntity: TableElement::class, cascade: ['remove'])]
     private Collection $elements;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -38,6 +39,7 @@ class Table
     public function addPermissionGroup(PermissionGroups $group): self
     {
         $this->permissionGroups->add($group);
+        $group->addTable($this);
         return $this;
     }
 
@@ -69,5 +71,16 @@ class Table
     {
         $this->tableName = $tableName;
         return $this;
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return [
+            'id' => $this->id,
+            'tableName' => $this->tableName,
+            'elements' => array_map(function($element) {
+                return ['id' => $element->getId(), 'content' => $element->getContent()];
+            }, $this->elements->getValues())
+        ];
     }
 }

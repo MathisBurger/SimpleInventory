@@ -45,7 +45,7 @@ class PermissionGroupService
      * @return PermissionGroups The new permission group
      * @throws NotAuthorizedException if the user has no permission
      */
-    public function createPermissionGroup(string $name, string $groupColor): PermissionGroups
+    public function createPermissionGroup(string $name, string $groupColor, array $tables): PermissionGroups
     {
         if (!$this->security->isGranted(PermissionGroupVoter::CREATE_GROUP)) {
             throw new NotAuthorizedException('You are not authorized for this action');
@@ -53,7 +53,15 @@ class PermissionGroupService
         $group = (new PermissionGroups())
             ->setName($name)
             ->setGroupColor($groupColor);
-        $this->entityManager->persist($group);
+        foreach ($tables as $tableID) {
+            $table = $this->tableRepository->findOneBy(['id' => $tableID]);
+            if (null === $table) {
+                throw new NotAuthorizedException('You do not have access to this table');
+            }
+            $table->addPermissionGroup($group);
+            $this->entityManager->persist($table);
+            $this->entityManager->persist($group);
+        }
         $this->entityManager->flush();
         return $group;
     }
@@ -154,7 +162,7 @@ class PermissionGroupService
         if ($table === null || $group === null) {
             throw new GroupNotFoundException('The group or table does not exist');
         }
-        $group->addTable($table);
+        $table->addPermissionGroup($group);
         $this->entityManager->persist($group);
         $this->entityManager->persist($table);
         $this->entityManager->flush();

@@ -67,7 +67,7 @@ class UserService
      * @throws GroupNotFoundException If the permissionGroup the user should be added to do not exist
      * @throws NotAuthorizedException If the user is not authorized
      */
-    public function createNewUser(string $username, string $password, array $permissionGroups): User
+    public function createNewUser(string $username, string $password, array $permissionGroups, array $roles): User
     {
         if ($this->security->isGranted(UserVoter::CREATE_USER)) {
             $usr = (new User())
@@ -80,6 +80,12 @@ class UserService
                 }
                 $permGroup->addUser($usr);
                 $this->entityManager->persist($permGroup);
+            }
+            if (in_array(User::ROLE_ADMIN, $roles) && !$this->security->isGranted(User::ROLE_ADMIN)) {
+                throw new NotAuthorizedException('You are not authorized for this action');
+            }
+            foreach ($roles as $role) {
+                $usr->addRole($role);
             }
             $this->entityManager->persist($usr);
             $this->entityManager->flush();
@@ -122,6 +128,54 @@ class UserService
             throw new NotAuthorizedException('You are not authorized for this action');
         }
         return $this->userRepository->findAll();
+    }
+
+    /**
+     * Updates an user in the database.
+     * 
+     * @param $id The ID of the user that should be updated
+     * @param $username The new username of the user
+     * @param $permissionGroups An array of all IDs of permissionGroups
+     * @param $roles All roles the user should have
+     * @return User The updated user.
+     * @throws NotAuthorizedException If the user cannot update an user
+     * @throws UserNotFoundException If the user does not exist
+     * @throws GroupNotFoundException If the group does not esist.
+     */
+    public function updateUser(
+        int $id,
+        string $username,
+        array $permissionGroups, 
+        array $roles
+    ): User {
+        if (!$this->security->isGranted(UserVoter::UPDATE_USER)) {
+            throw new NotAuthorizedException('You are not authorized');
+        }
+        $user = $this->userRepository->findOneBy(['id' => $id]);
+        if (null === $user) {
+            throw new UserNotFoundException('The user does not exist in the system.');
+        }
+        $user->setUsername($username);
+        foreach ($user->getPermissionGroups()->getValues() as $group) {
+            $user->removePermissionGroup($group);
+        }
+        foreach ($permissionGroups as $permissionGroup) {
+            $permGroup = $this->permissionGroupsRepository->findOneBy(['id' => $permissionGroup]);
+                if ($permGroup === null) {
+                    throw new GroupNotFoundException('The requested permission group was not found');
+                }
+                $permGroup->addUser($user);
+                $this->entityManager->persist($permGroup);
+        }
+        foreach($user->getRoles() as $role) {
+            $user->removeRole($role);
+        }
+        foreach($roles as $role) {
+            $user->addRole($role);
+        }
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+        return $user;
     }
 
 }

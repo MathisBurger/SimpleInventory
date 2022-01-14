@@ -1,5 +1,5 @@
 <template>
-  <v-dialog
+    <v-dialog
     v-model="open"
     persistent
     max-width="600px"
@@ -19,19 +19,7 @@
               <v-text-field
                   label="Username"
                   required
-                  v-model="username"
-              ></v-text-field>
-            </v-col>
-            <v-col
-                cols="12"
-                sm="6"
-                md="6"
-            >
-              <v-text-field
-                  label="Password"
-                  hint="Please choose an safe password"
-                  type="password"
-                  v-model="password"
+                  v-model="userInput.userIdentifier"
               ></v-text-field>
             </v-col>
             <v-col
@@ -44,14 +32,14 @@
                   label="Permission-Groups"
                   required
                   multiple
-                  v-model="groups"
+                  v-model="permGroups"
               ></v-select>
               <v-select
                   :items="roles"
                   label="Roles"
                   required
                   multiple
-                  v-model="selectedRoles"
+                  v-model="userInput.roles"
               ></v-select>
             </v-col>
           </v-row>
@@ -71,11 +59,11 @@
             color="blue darken-1"
             text
             @click="() => {
-              addUser();
+              updateUser();
               closeDialog();
             }"
         >
-          Create
+          Update
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -83,31 +71,28 @@
 </template>
 
 <script lang="ts">
-import { PermissionLevels } from "../../../permissions";
-import Vue from "vue";
-import {PermissionGroup} from "../../../../typings/PermissionGroup";
-import APIService from "../../../services/APIService";
+import { PermissionLevels } from '../../../permissions';
+import APIService from '../../../services/APIService';
+import { PermissionGroup } from 'assets/typings/PermissionGroup';
+import Vue from 'vue';
 
 export default Vue.extend({
-  name: "AddUserDialog",
+ name: "UpdateUserDialog",
   props: {
     open: Boolean,
     closeDialog: Function,
-    addUserToList: Function,
+    userInput: Object
   },
   data() {
     return {
       permissionGroups: [] as Array<PermissionGroup>,
       apiService: new APIService(),
-      username: '',
-      password: '',
-      groups: [] as Array<any>,
-      selectedRoles: [] as Array<PermissionLevels>,
       roles: [
         PermissionLevels.ROLE_USER,
         PermissionLevels.ROLE_ADMIN,
         PermissionLevels.ROLE_MANAGER
-      ]
+      ],
+      permGroups: [] as Array<number>
     };
   },
   methods: {
@@ -117,47 +102,28 @@ export default Vue.extend({
         value: group.id
       }));
     },
-    async addUser() {
-      if (this.username && this.password) {
-        const resp = await this.apiService.createUser(
-            this.username,
-            this.password,
-            this.groups,
-            this.selectedRoles
-        );
-        if (resp.user) {
-          this.addUserToList(resp.user);
-          this.$notify({
-            text: resp.message,
-            type: 'success',
-            group: 'main',
-            title: 'Creation'
-          });
-        } else {
-          this.$notify({
-            text: resp.message,
-            type: 'success',
-            group: 'main',
-            title: 'Creation'
-          });
-        }
-
-      } else {
-        this.$notify({
-          text: 'Please fill out all fields',
-          type: 'error',
-          group: 'main',
-          title: 'Error'
-        });
-      }
+    async updateUser() {
+      const resp = await this.apiService.updateUser(
+          this.userInput.id,
+          this.userInput.userIdentifier,
+          this.permGroups,
+          this.userInput.roles
+      );
+      this.$notify({
+        text: resp.message,
+        type: resp.user ? 'success' :'error',
+        group: 'main',
+        title: 'Error'
+      });
     }
   },
   async mounted() {
     this.permissionGroups = (await this.apiService.getAllPermissionGroups()).groups;
+  },
+  updated() {
+      if (this.userInput.permissionGroups && this.permGroups.length === 0) {
+        this.permGroups = this.userInput?.permissionGroups?.map((group: any) => group.id);
+    }
   }
 });
 </script>
-
-<style scoped>
-
-</style>

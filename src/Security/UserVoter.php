@@ -15,6 +15,7 @@ class UserVoter extends Voter
     public const CREATE_USER = 'CREATE_USER';
     public const DELETE_USER = 'DELETE_USER';
     public const VIEW_USERS = 'VIEW_USERS';
+    public const UPDATE_USER = 'UPDATE_USER';
 
     private Security $security;
 
@@ -28,7 +29,8 @@ class UserVoter extends Voter
         if (!in_array($attribute, [
             self::CREATE_USER,
             self::DELETE_USER,
-            self::VIEW_USERS
+            self::VIEW_USERS,
+            self::UPDATE_USER
         ])) {
             return false;
         }
@@ -48,7 +50,7 @@ class UserVoter extends Voter
         }
 
         return match ($attribute) {
-            self::CREATE_USER, self::DELETE_USER => $this->canUpdateUserOnHighLevel(),
+            self::CREATE_USER, self::DELETE_USER, self::UPDATE_USER => $this->canUpdateUserOnHighLevel(),
             self::VIEW_USERS => $this->userIsAllowedToViewUser(),
             default => false,
         };

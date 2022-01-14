@@ -158,6 +158,10 @@ class TableService
         if (!$user instanceof User) {
             throw new NotAuthorizedException('You are not authorized for this action');
         }
+        // If the user is an admin, he can see all tables
+        if ($this->security->isGranted(User::ROLE_ADMIN)) {
+            return $this->tableRepository->findAll();
+        }
         return $this->tableRepository->findAllForUser($user);
     }
 

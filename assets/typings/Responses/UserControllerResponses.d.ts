@@ -13,3 +13,8 @@ export interface DeleteUserRespose {
     message: string;
     success?: boolean;
 }
+
+export interface UpdateUserResponse {
+    message: string;
+    user?: User;
+}

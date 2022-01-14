@@ -26,10 +26,12 @@ class TableRepository extends ServiceEntityRepository
      */
     public function findAllForUser(User $user): array
     {
-        return array_map(function ($group) {
-            return array_map(function($table) {
-                return $table;
-            }, $group->getTables()->getValues());
-        }, $user->getPermissionGroups()->getValues());
+        $tables = [];
+        foreach ($user->getPermissionGroups()->getValues() as $permissionGroup) {
+            foreach ($permissionGroup->getTables()-> getValues() as $table) {
+                $tables[] = $table;
+            }
+        }
+        return $tables;
     }
 }

@@ -4,9 +4,10 @@ namespace App\Entity;
 
 use App\Repository\TableElementRepository;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 
 #[ORM\Entity(repositoryClass: TableElementRepository::class)]
-class TableElement
+class TableElement implements JsonSerializable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -17,6 +18,7 @@ class TableElement
     private array $content = [];
 
     #[ORM\ManyToOne(targetEntity: Table::class, inversedBy: 'elements')]
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?Table $parentTable = null;
 
     public function getId(): ?int
@@ -45,5 +47,13 @@ class TableElement
     public function getParentTable(): ?Table
     {
         return $this->parentTable;
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return [
+            'id' => $this->id,
+            'content' => $this->content
+        ];
     }
 }
