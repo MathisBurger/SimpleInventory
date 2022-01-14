@@ -61,11 +61,24 @@ export default Vue.extend({
    name: "PermissionGroupTableCard",
    data() {
         return {
+            /**
+             * The service that handles the communication with the REST-API
+             */
             apiService: new APIService(),
+            /**
+             * All tables that are not added to the permission group.
+             * Is used for giving options for tables that can be added to the group.
+             */
             unaddedTables: [] as Array<PermissionGroupTableType>,
         };
     },
     methods: {
+        /**
+         * Fetches all tables from the server and then filters
+         * out all tables that are already included in the 
+         * permission group. All tables that are not in the permission
+         * group yet are set.
+         */
         async fetchUnaddedTables() {
             const tables = (await this.apiService.getAllTables()).tables;
             const existingIDs = this.permissionGroup.tables.map((t: PermissionGroupTableType) => t.id);
@@ -80,6 +93,13 @@ export default Vue.extend({
             });
             this.unaddedTables = unaddedTables;
         },
+        /**
+         * Removes an table from the current permission group.
+         * It shows notifications, if the action failed or was successful.
+         * Furthermore it updates the list view.
+         * 
+         * @param id The ID of the table that should be removed from the permission group
+         */
         async removeTable(id: number) {
             try {
                 const resp = await this.apiService.removeTableFromPermissionGroup(this.permissionGroup.id ?? -1, id);
@@ -101,6 +121,13 @@ export default Vue.extend({
             }
 
         },
+        /**
+         * Adds an table from the current permission group.
+         * It shows notifications, if the action failed or was successful.
+         * Furthermore it updates the list view.
+         * 
+         * @param id The ID of the table that should be added to the permission group
+         */
         async addTable(id: number, name: string) {
             try {
                 const resp = await this.apiService.addTableToPermissionGroup(this.permissionGroup.id ?? -1, id);
@@ -126,6 +153,9 @@ export default Vue.extend({
         }
     },
     props: {
+        /**
+         * The current permission group that is provided by the parent update component.
+         */
         permissionGroup: Object
     },
     async mounted() {
