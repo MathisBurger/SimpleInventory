@@ -7,15 +7,15 @@
     <v-toolbar dense>
       <v-toolbar-title tag="h1">SimpleInventory</v-toolbar-title>
       <v-spacer />
-      <v-btn icon>
-        <v-icon>mdi-account</v-icon>
-      </v-btn>
+      <NavbarUserActions />
     </v-toolbar>
   </v-card>
 </template>
 
 <script>
+import NavbarUserActions from './NavbarUserActions.vue'
 export default {
+  components: { NavbarUserActions },
   name: "Header"
 }
 </script>
