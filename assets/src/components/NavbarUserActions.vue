@@ -27,6 +27,11 @@ import Vue from 'vue';
 export default Vue.extend({
     name: "NavbarUserActions",
     methods: {
+        /**
+         * Navigates to the requested route.
+         * 
+         * @param route The route that should be navigated to. 
+         */
         async navigateToRoute(route: string) {
             await this.$router.push(route);
         }

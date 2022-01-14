@@ -15,15 +15,32 @@ export default Vue.extend({
 
   data() {
     return {
+      /**
+       * The route that is currently active in the browser
+       */
       route: this.$router.currentRoute.path,
+      /**
+       * All routes that the user can access
+       */
       rootRoutes: routes,
+      /**
+       * The service that is used for communiciation with the REST-API
+       */
       apiService: new APIService(),
+      /**
+       * The service that is used for handling localStorage requests and writing data
+       * with more type safety.
+       */
       storage: new StorageService(),
     }
   },
   methods: {
     /**
-     * Fetches the current route
+     * Fetches the current route.
+     * It is the extended route within the permissions 
+     * that are required to access the page.
+     * 
+     * @returns ExpandedRoute|null The route 
      */
     getCurrentRoute(): ExpandedRoute|null {
       let route = null;
@@ -35,7 +52,12 @@ export default Vue.extend({
       return route;
     },
     /**
-     * Checks if the user is allowed to access this route
+     * Checks if the user is allowed to access this route.
+     * It uses a list of all routes that are registered in the system.
+     * Therefore, the workload grows with each route that has been registered.
+     * 
+     * @param user The user that wants to access the route
+     * @returns boolean if the user can accss the requested route
      */
     checkPermission(user: User): boolean {
       const route = this.getCurrentRoute();
@@ -68,7 +90,3 @@ export default Vue.extend({
   }
 });
 </script>
-
-<style scoped>
-
-</style>

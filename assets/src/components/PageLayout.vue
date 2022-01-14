@@ -21,6 +21,10 @@ import Navbar from "./Navbar.vue";
 export default Vue.extend({
   name: "PageLayout",
   props: {
+    /**
+     * A text that is displayed on top of main content card.
+     * NOTE: You may use it as a title.
+     */
     title: String,
   },
   components: {Navbar},
