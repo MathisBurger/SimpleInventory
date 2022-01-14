@@ -60,7 +60,6 @@
 </template>
 
 <script lang="ts">
-import APIService from '../.././../services/APIService';
 import PermissionGroupUserCard from '../../cards/permissions/PermissionGroupUserCard.vue';
 import Vue from 'vue';
 import PermissionGroupTableCard from '../../cards/permissions/PermissionGroupTableCard.vue';
@@ -69,14 +68,18 @@ export default Vue.extend({
  name: "UpdateUserDialog",
  components: {PermissionGroupUserCard, PermissionGroupTableCard},
   props: {
+    /** 
+     * Indicates whether the dialog is opened or not 
+     */
     open: Boolean,
+    /**
+     * Can be used for closing the dialog from inside the dialog
+     */
     closeDialog: Function,
+    /**
+     * The input of the permissionGroup that is used for displaying group data
+     */
     userInput: Object
-  },
-  data() {
-    return {
-      apiService: new APIService(),
-    };
   },
 });
 </script>

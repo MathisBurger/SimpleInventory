@@ -78,26 +78,61 @@ import Vue from 'vue';
 export default Vue.extend({
     name: "AddPermissionGroupDialog",
     props: {
+        /**
+         * If the dialog is currently opened or not
+         */
         open: Boolean,
+        /**
+         * Is used to close the dialog from the dialog itself
+         */
         closeDialog: Function,
+        /**
+         * Adds the group to the list of permission groups after
+         * its creation.
+         */
         addGroupToList: Function,
     },
     data() {
-    return {
-      tables: [] as Array<Table>,
-      apiService: new APIService(),
-      name: '',
-      groupColor: '',
-      selectedTables: [] as Array<number>
-    };
+      return {
+        /**
+         * All tables that are currently existing in the system.
+         */
+        tables: [] as Array<Table>,
+        /**
+         * The service used for communication with the REST-API
+         */
+        apiService: new APIService(),
+        /**
+         * The name of the new permission group
+         */
+        name: '',
+        /**
+         * The color of the new permission group (HEX, RGB)
+         */
+        groupColor: '',
+        /**
+         * All tables that are selected for being added to the new permission group
+         */
+        selectedTables: [] as Array<number>
+      };
   },
     methods: {
+      /**
+       * Parses all tables into a readable type for the data grid.
+       * 
+       * @returns any[] All tables in a readable format.
+       */
      getAllTables() {
          return this.tables.map((table) => ({
             text: table.tableName,
             value: table.id
          }));
      },
+     /**
+      * Tries to add a new permission group into the system. 
+      * After that it throws a matching notification into the 
+      * user screen.
+      */
      async addGroup() {
          if (this.name) {
              const resp = await this.apiService.createPermissionGroup(
