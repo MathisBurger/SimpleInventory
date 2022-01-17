@@ -9,24 +9,7 @@
       raised
   >
     <v-navigation-drawer>
-      <v-list
-          dense
-          nav
-      >
-        <v-list-item
-            v-for="item in items"
-            :key="item.title"
-            :href="item.redirect"
-        >
-          <v-list-item-icon>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-icon>
-
-          <v-list-item-content>
-            <v-list-item-title style="font-size: 1.3em; font-family: 'Roboto', sans-serif">{{ item.title }}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
+      <NavbarList :items="items" />
     </v-navigation-drawer>
   </v-card>
 </template>
@@ -35,8 +18,10 @@
 
 import {StorageService} from "../services/storageService";
 import {PermissionLevels} from "../permissions";
+import NavbarList from './NavbarList.vue';
 
 export default {
+  components: { NavbarList },
   name: "Navbar",
   data () {
     const storage = new StorageService();
