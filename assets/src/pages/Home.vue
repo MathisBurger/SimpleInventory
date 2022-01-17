@@ -1,17 +1,19 @@
 <template>
   <PageLayout title="Dashboard">
-    <h1>Dashboard placeholder</h1>
+    <IndexContent />
   </PageLayout>
 </template>
 
 <script>
+import IndexContent from '../components/IndexContent.vue';
 import PageLayout from "../components/PageLayout";
 export default {
   name: "Home",
-  components: {PageLayout}
+  components: {PageLayout, IndexContent}
 }
 </script>
 
-<style scoped>
+<sty
+    IndexContentle scoped>
 
 </style>
