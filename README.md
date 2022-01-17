@@ -3,9 +3,9 @@
 <hr>
 <strong>n open source inventory system built with php and vue.js</strong><br><br>
 
-<img src="https://img.shields.io/github/workflow/status/mathisburger/MathOnWeb/publish?style=for-the-badge">
-<img src="https://img.shields.io/github/license/mathisburger/MathOnWeb?style=for-the-badge"> 
-<img src="https://img.shields.io/github/v/release/mathisburger/MathOnWeb?style=for-the-badge">
+<img src="https://img.shields.io/github/workflow/status/mathisburger/SimpleInventory/publish?style=for-the-badge">
+<img src="https://img.shields.io/github/license/mathisburger/SimpleInventory?style=for-the-badge"> 
+<img src="https://img.shields.io/github/v/release/mathisburger/SimpleInventory?style=for-the-badge">
 </div>
 <hr>
 <div align="center">
