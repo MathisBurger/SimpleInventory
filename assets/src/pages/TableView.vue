@@ -70,17 +70,45 @@ export default Vue.extend({
     components: {PageLayout, AddTableElementDialog, UpdateTableElementDialog},
     data() {
         return {
+            /**
+             * All elements of the table
+             */
             elements: [] as Array<any>,
+            /**
+             * All headers of the table
+             */
             headers: [] as Array<any>,
+            /**
+             * The service that is used for communication with the REST-API
+             */
             apiService: new APIService(),
+            /**
+             * Indicates whether the dialog for adding new elements is opened
+             */
             addDialogOpen: false,
+            /**
+             * Indicates whether the dialog for updating elements is opened
+             */
             updateDialogOpen: false,
+            /**
+             * The ID of the current table
+             */
             tableID: 0,
+            /**
+             * All selected tables from the listview
+             */
             selectedElements: [] as Array<any>,
+            /**
+             * The table element that can be updated.
+             */
             editableObject: {} as any
         }
     },
     methods: {
+        /**
+         * Fetches all headers from the first object element that
+         * is fetched from the server.
+         */
         generateHeadersFromElements() {
             if (this.elements.length > 0) {
                 this.headers = [
@@ -92,12 +120,18 @@ export default Vue.extend({
                 ];
             }
         },
+        /**
+         * Fetches all keys of the first object of the array key
+         */
         getObjectKeys(): string[] {
             if (this.elements.length > 0) {
                 return Object.keys(this.elements[0]).filter((element) => element !== 'id');
             }
             return [];
         },
+        /**
+         * Fetches all table elements from the table
+         */
         async fetchTableElements() {
             const tableID = parseInt('' + this.$route.query.tableID, 10);
             this.tableID = tableID;
@@ -105,12 +139,20 @@ export default Vue.extend({
                 return {id: 0+element.id, ...element.content}
             }) ?? [];
         },
+        /**
+         * Adds a new table element to the list view
+         * 
+         * @param element The new table element
+         */
         addElementToList(element: any) {
             this.fetchTableElements();
             if (this.headers.length === 0) {
                 this.generateHeadersFromElements();
             }
         },
+        /**
+         * Deletes all selected table elements from the server.
+         */
         async deleteSelectedElements() {
             for (const element of this.selectedElements) {
                 console.log(element);
@@ -124,7 +166,11 @@ export default Vue.extend({
             }
             await this.fetchTableElements();
         },
-
+        /**
+         * Rearranges all elements of the current list view and table
+         * 
+         * @param name The name of the new field
+         */
         rearrangeElements(name: string) {
             if (this.elements.length > 0) {
                 const newElements = this.elements.map((element) => {
@@ -136,6 +182,9 @@ export default Vue.extend({
                 this.generateHeadersFromElements();
             }
         },
+        /**
+         * Refetches all table elements
+         */
         updateTableElement() {
             this.fetchTableElements();
         }

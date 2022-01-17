@@ -84,8 +84,17 @@ export default Vue.extend({
   components: {AddUserDialog, PageLayout, UpdateUserDialog},
   data() {
     return {
+      /**
+       * The service that is used for communication with the REST-API
+       */
       apiService: new APIService(),
+      /**
+       * All users that should be displayed in the list view
+       */
       users: [] as Array<User>,
+      /**
+       * All headers of the table
+       */
       tableHeaders: [
         {text: 'ID', value: 'id', sortable: true},
         {text: 'Actions', value: 'actions'},
@@ -93,13 +102,31 @@ export default Vue.extend({
         {text: 'Permission-groups', value: 'permissionGroups'},
         {text: 'Roles', value: 'roles'},
       ],
+      /**
+       * Indicates whether the dialog for adding new users is currently open
+       */
       addDialogOpen: false,
+      /**
+       * All selected users in the list view
+       */
       selected: [] as Array<User>,
+      /**
+       * The user that can be updated
+       */
       editableObject: {} as any,
+      /**
+       * Indicates whether the dialog for updating users is currently open
+       */
       updateDialogOpen: false
     }
   },
   methods: {
+    /**
+     * Gets the color for the user role batch
+     * 
+     * @param role The role thats color should be fetched
+     * @return string The color string 
+     */
     getRoleColor(role: PermissionLevels): string {
       switch (role) {
         case PermissionLevels.ROLE_USER:
@@ -112,9 +139,17 @@ export default Vue.extend({
           return '#fff';
       }
     },
+    /**
+     * The user that should be added to the list view
+     * 
+     * @param user The user that should be added to the list view
+     */
     addUser(user: User) {
       this.users.push(user);
     },
+    /**
+     * Deletes all selected users from the server.
+     */
     async deleteUser() {
       for (const user of this.selected) {
         const resp = await this.apiService.deleteUser(user.id ?? 0);

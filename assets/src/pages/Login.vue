@@ -35,16 +35,34 @@ export default Vue.extend({
   name: "Login",
   data() {
       return {
+        /**
+         * Rules for the input fields
+         */
         rules: [
             (value: string) => !!value || 'Required.'
         ],
+        /**
+         * The inserted username
+         */
         username: '',
+        /**
+         * The inserted password
+         */
         password: '',
+        /**
+         * The service used for communication with the REST-API
+         */
         apiService: new APIService(),
+        /**
+         * The service used for storing user specific data into the local storage
+         */
         storage: new StorageService(),
       }
   },
   methods: {
+    /**
+     * Used for logging in a user with the provided credentials.
+     */
     async login() {
       try {
         const login = await this.apiService.login(this.username, this.password);
