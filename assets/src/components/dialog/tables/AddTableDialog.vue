@@ -59,16 +59,36 @@ export default Vue.extend({
     name: "AddTableDialog",
     data() {
         return {
+            /**
+             * The service used for communication with the REST-API
+             */
             apiService: new APIService(),
+            /**
+             * The table of the new name
+             */
             name: ''
         }
     },
     props: {
+        /**
+         * If the dialog is currently opened
+         */
         open: Boolean,
+        /**
+         * The function that is being executed to close the dialog
+         */
         closeDialog: Function,
+        /**
+         * Is used for adding a new table to the parent listView
+         */
         addTableToList: Function,
     },    
     methods: {
+      /**
+       * Communicates with the server and adds the new table
+       * to the list if the creation on the server 
+       * was successful
+       */
         async addTable() {
             const resp = await this.apiService.createTable(this.name);
             this.$notify({

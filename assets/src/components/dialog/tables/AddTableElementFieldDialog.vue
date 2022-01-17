@@ -38,7 +38,7 @@
             color="blue darken-1"
             text
             @click="() => {
-              addField(name);
+              addField(transformFieldName());
               closeDialog();
             }"
         >
@@ -56,14 +56,35 @@ import Vue from 'vue';
 export default Vue.extend({
     name: "AddTableElemenrFieldDialog",
     props: {
+        /**
+         * The method that is used to add a new field
+         * on the table element model
+         */
         addField: Function,
+        /**
+         * Indicates whether the dialog is currently opened
+         */
         open: Boolean,
+        /**
+         * Is used for closing the current dialog
+         */
         closeDialog: Function
     },
     data() {
         return {
+          /**
+           * The name of the new table field
+           */
             name: ''
         }
+    },
+    methods: {
+      /**
+       * Removes all whitespaces from the field name and replaces it with an -
+       */
+      transformFieldName() {
+        return this.name.replaceAll(' ', '-');
+      }
     }
 })
 </script>
