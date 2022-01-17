@@ -79,29 +79,58 @@ import Vue from 'vue';
 export default Vue.extend({
  name: "UpdateUserDialog",
   props: {
+    /**
+     * Indicates whether the dialog is currently opened
+     */
     open: Boolean,
+    /**
+     * Is used for closing the current dialog.
+     */
     closeDialog: Function,
+    /**
+     * The initial user that should be updated
+     */
     userInput: Object
   },
   data() {
     return {
+      /**
+       * All availible permission groups in the system
+       */
       permissionGroups: [] as Array<PermissionGroup>,
+      /**
+       * The service used for communicating with the REST-API
+       */
       apiService: new APIService(),
+      /**
+       * All possible roles that the user can have
+       */
       roles: [
         PermissionLevels.ROLE_USER,
         PermissionLevels.ROLE_ADMIN,
         PermissionLevels.ROLE_MANAGER
       ],
+      /**
+       * All IDs of permission groups that should be assigned to the user
+       */
       permGroups: [] as Array<number>
     };
   },
   methods: {
+    /**
+     * All permission-group items parsed for beeing displayed
+     * into an multiselect form field.
+     */
     getPermissionGroupItems(): any[] {
       return this.permissionGroups.map((group) => ({
         text: group.name,
         value: group.id
       }));
     },
+    /**
+     * Updates an user on the server and catches the response as 
+     * error
+     */
     async updateUser() {
       const resp = await this.apiService.updateUser(
           this.userInput.id,

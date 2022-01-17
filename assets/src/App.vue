@@ -16,10 +16,17 @@ export default {
   components: {PermissionWrapper, Navbar, Header},
   data() {
     return {
+      /**
+       * The service that handles communication with the REST-API
+       */
       apiService: new APIService()
     }
   },
   methods: {
+    /**
+     * Checks if the user is logged in.
+     * Otherwise, it redirects the user to the login page
+     */
     async checkLogin() {
       try {
         await this.apiService.checkLogin();

@@ -60,18 +60,43 @@ export default Vue.extend({
     name: "AddTableElementDialog",
     data() {
         return {
+          /**
+           * The service that is used for communication with the server.
+           */
             apiService: new APIService(),
+            /**
+             * The input that provides the initial data for the table that should 
+             * be edited.
+             */
             input: {} as any,
         }
     },
     props: {
+        /**
+         * If the dialog is currently opened
+         */
         open: Boolean,
+        /**
+         * The function that is used to close the dialog
+         */
         closeDialog: Function,
+        /**
+         * The function that is used for updating an table element
+         */
         updateTableElement: Function,
+        /**
+         * The initial table element, that should be updated
+         */
         object: Object,
+        /**
+         * The ID of the table that contains the element that should be updated
+         */
         tableID: Number,
     },    
     methods: {
+      /**
+       * Used for updating an table element on the server
+       */
         async updateElement() {
             const resp = await this.apiService.updateTableElement(this.object.id, this.object);
              this.$notify({
@@ -86,6 +111,10 @@ export default Vue.extend({
                 this.closeDialog();
               }
         },
+        /**
+         * Returns all field the object contains except the ID, because
+         * the ID should not be changed
+         */
         getObjectFields() {
             return Object.keys(this.object).filter(key => key !== 'id');
         }

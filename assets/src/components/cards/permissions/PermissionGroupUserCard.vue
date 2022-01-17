@@ -60,11 +60,22 @@ export default Vue.extend({
     name: "PermissionGroupUserCard",
     data() {
         return {
+            /**
+             * The service used for the communication with the RESP-API
+             */
             apiService: new APIService(),
+            /**
+             * All users that are not in the permission group yet.
+             */
             unaddedUsers: [] as Array<PermissionGroupUserType>,
         };
     },
     methods: {
+        /**
+         * Fetches all users from the server and filters, which of
+         * them are not in the current permission group yet. 
+         * It sets these users into the data variable.
+         */
         async fetchUnaddedUsers() {
             const users = (await this.apiService.getAllUsers()).users;
             const existingIDs = this.permissionGroup.users.map((u: PermissionGroupUserType) => u.id);
@@ -79,6 +90,12 @@ export default Vue.extend({
             });
             this.unaddedUsers = unaddeeUsers;
         },
+        /**
+         * Removes an user from the permission group. It sends 
+         * notifications on every possible result.
+         * 
+         * @param id The ID of the user that should be removed from the permission group.
+         */
         async removeUser(id: number) {
             try {
                 const resp = await this.apiService.removeUserFromPermissionGroups(this.permissionGroup.id ?? -1, id);
@@ -100,6 +117,13 @@ export default Vue.extend({
             }
 
         },
+        /**
+         * Adds a user to the permission group. This method sends notifications
+         * on every possible result.
+         * 
+         * @param id The ID of the user that should be added to the permission group
+         * @param name The name of the user that should be added to the permission group
+         */
         async addUser(id: number, name: string) {
             try {
                 const resp = await this.apiService.addUserToPermissionGroup(this.permissionGroup.id ?? -1, id);
@@ -125,6 +149,10 @@ export default Vue.extend({
         }
     },
     props: {
+        /**
+         * The initial permission group that is being updated
+         * in this component.
+         */
         permissionGroup: Object
     },
     async mounted() {

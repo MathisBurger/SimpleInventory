@@ -45,6 +45,7 @@ export default {
       {title: 'Tables', icon: 'mdi-table', redirect: '/tables'},
     ];
 
+    // If the user is an administrator he has acces to other routes.
     if ((storage.getActiveUser()?.roles ?? []).indexOf(PermissionLevels.ROLE_ADMIN) > -1) {
       listItems.push(
         {title: 'Users', icon: 'mdi-account', redirect: '/user-management'},
@@ -52,6 +53,9 @@ export default {
         );
     }
     return {
+      /** 
+       * All items that are given in the sidebar nav.
+      */
       items: listItems
     }
   },

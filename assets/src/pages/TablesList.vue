@@ -52,14 +52,29 @@ export default Vue.extend({
    name: "TablesList",
    data() {
      return {
+       /**
+        * All headers of the data grid
+        */
        headers: [
          {text: 'ID', value: 'id', sortable: true},
          {text: 'Name', value: 'tableName'},
          {text: 'Elements', value: 'elements'}
        ],
+       /**
+        * All tables that are displayed in the data grid
+        */
        tables: [] as Array<Table>,
+       /**
+        * The service that is used for communicating with the REST-API
+        */
        apiService: new APIService(),
+       /**
+        * Indicates whether the dialog to add a new table is opened
+        */
        addDialogOpen: false,
+       /**
+        * All tables that are currently selected in the list view
+        */
        selectedTables: [] as Array<Table>
      }
    },
@@ -67,6 +82,9 @@ export default Vue.extend({
     this.tables = (await this.apiService.getAllTables()).tables;
   },
   methods: {
+    /**
+     * Deletes all selected tables from the server.
+     */
     async deleteTable() {
         for (const table of this.selectedTables) {
           const resp = await this.apiService.deleteTable(table.id);
@@ -79,9 +97,19 @@ export default Vue.extend({
         }
         this.tables = (await this.apiService.getAllTables()).tables;
     },
+    /**
+     * Adds a new table to the list view.
+     * 
+     * @param table The new table
+     */
     addTable(table: Table) {
       this.tables.push(table);
     },
+    /**
+     * Redirects to the detailed view of this table.
+     * 
+     * @param row The table that should be redirected to
+     */
     async redirectTable(row: Table) {
       await this.$router.push('/table-view?tableID=' + row.id);
     }

@@ -75,20 +75,50 @@ export default Vue.extend({
     name: "AddTableElementDialog",
     data() {
         return {
+            /**
+             * The service that is used for communication with the server via a REST interface.
+             */
             apiService: new APIService(),
+            /**
+             * The initial table element that should be added
+             */
             input: {} as any,
+            /**
+             * Indicates whether the dialog to add a new field is currently opened
+             */
             fieldDialogOpen: false,
         }
     },
     props: {
+        /**
+         * Is the dialog is currently opened
+         */
         open: Boolean,
+        /**
+         * Is used for closing the current dialog
+         */
         closeDialog: Function,
+        /**
+         * Is used for adding a new table element to the parent table
+         */
         addElementToList: Function,
+        /**
+         * All keys of the table element object. Provides all names for text input fields
+         */
         objectKeys: Array,
+        /**
+         * The ID of the parent table, the element should be added to
+         */
         tableID: Number,
+        /**
+         * Used for updating all table elements with a new field
+         */
         rearrangeRows: Function
     },    
     methods: {
+        /**
+         * Adds a new table element to the parent table 
+         */
         async addElement() {
             const resp = await this.apiService.createTableElement(this.tableID, this.input);
              this.$notify({
@@ -103,6 +133,10 @@ export default Vue.extend({
                 this.closeDialog();
               }
         },
+        /**
+         * Adds a new field to the table elements 
+         * and rearranges all rows, if this is required
+         */
         addField(name: string) {
           if (this.objectKeys.length > 0) {
             this.rearrangeRows(name);

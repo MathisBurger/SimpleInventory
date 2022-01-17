@@ -7,7 +7,13 @@ import PermissionGroups from "./pages/PermissionGroups.vue";
 import TablesList from "./pages/TablesList.vue";
 import TableView from "./pages/TableView.vue";
 
+/**
+ * The extended route type. 
+ */
 export type ExpandedRoute =  {
+    /**
+     * Indicates what type of auth the user can have.
+     */
     permissions: PermissionLevels[];
 } & RouteConfig;
 

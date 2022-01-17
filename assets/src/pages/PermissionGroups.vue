@@ -75,8 +75,17 @@ export default Vue.extend({
    name: 'PermissionGroups',
    data() {
        return {
+           /**
+            * All groups that should be displayed in the grid
+            */
            groups: [] as Array<PermissionGroup>,
+           /**
+            * The service that is used for communication with the REST-API
+            */
            apiService: new APIService(),
+           /**
+            * All headers of the data grid
+            */
            headers: [
                {text: 'ID', value: 'id'},
                {text: 'Actions', value: 'actions'},
@@ -84,16 +93,34 @@ export default Vue.extend({
                {text: 'Color', value: 'groupColor'},
                {text: 'Tables', value: 'tables'}
            ],
+           /**
+            * Indicates whether the dialog for adding new users is opened
+            */
            addDialogOpen: false,
+           /**
+            * All groups that are selected in the datagrid
+            */
            selectedGroups: [] as Array<PermissionGroup>,
+           /**
+            * Indicates whether the dialog to update groups is opened.
+            */
            updateDialogOpen: false,
+           /**
+            * The group that should be edited
+            */
            editableObject: {} as any
        };
    },
    methods: {
+       /**
+        * Adds a new group to the list view
+        */
        addGroupToList(group: PermissionGroup) {
            this.groups.push(group);
        },
+       /**
+        * Deletes all selected groups from the server.
+        */
        async deleteSelectedPermissionGroups() {
            for (const group of this.selectedGroups) {
                const resp = await this.apiService.deletePermissionGroup(group.id);
