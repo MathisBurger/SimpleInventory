@@ -6,6 +6,7 @@ import UserManagement from "./pages/UserManagement.vue";
 import PermissionGroups from "./pages/PermissionGroups.vue";
 import TablesList from "./pages/TablesList.vue";
 import TableView from "./pages/TableView.vue";
+import Glossary from "./pages/Glossary.vue";
 
 /**
  * The extended route type. 
@@ -54,6 +55,11 @@ const routes: ExpandedRoute[] = [
     {
         path: '/table-view',
         component: TableView,
+        permissions: [PermissionLevels.ROLE_USER]
+    },
+    {
+        path: '/glossary',
+        component: Glossary,
         permissions: [PermissionLevels.ROLE_USER]
     }
 ];

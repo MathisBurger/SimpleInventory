@@ -16,6 +16,16 @@
             >
                 <v-list-item-title>Login</v-list-item-title>
             </v-list-item>
+            <v-list-item
+                @click="() => logout()"
+            >
+                <v-list-item-title>Logout</v-list-item-title>
+            </v-list-item>
+            <v-list-item
+                @click="() => navigateToRoute('/glossary')"
+            >
+                <v-list-item-title>Glossary</v-list-item-title>
+            </v-list-item>
         </v-list>
     </v-menu>
 </template>
@@ -34,6 +44,13 @@ export default Vue.extend({
          */
         async navigateToRoute(route: string) {
             await this.$router.push(route);
+        },
+        /**
+         * Loggs an user out of the system.
+         */
+        async logout() {
+            document.cookie = '';
+            this.$router.push('/login');
         }
     }
 });
