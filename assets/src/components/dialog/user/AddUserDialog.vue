@@ -91,18 +91,48 @@ import APIService from "../../../services/APIService";
 export default Vue.extend({
   name: "AddUserDialog",
   props: {
+    /**
+     * If the dialog is currently opened
+     */
     open: Boolean,
+    /**
+     * Is used for closing the current dialog
+     */
     closeDialog: Function,
+    /**
+     * Adds a new user to the user list view
+     */
     addUserToList: Function,
   },
   data() {
     return {
+      /**
+       * All permission groups in the system
+       */
       permissionGroups: [] as Array<PermissionGroup>,
+      /**
+       * The service used for communication with the REST-API
+       */
       apiService: new APIService(),
+      /**
+       * The new username of the user
+       */
       username: '',
+      /**
+       * The new password of the user
+       */
       password: '',
-      groups: [] as Array<any>,
+      /**
+       * All groups that should be added to the user
+       */
+      groups: [] as Array<number>,
+      /**
+       * All roles that should be added to the user
+       */
       selectedRoles: [] as Array<PermissionLevels>,
+      /**
+       * All roles that can be added to the user
+       */
       roles: [
         PermissionLevels.ROLE_USER,
         PermissionLevels.ROLE_ADMIN,
@@ -111,12 +141,19 @@ export default Vue.extend({
     };
   },
   methods: {
+    /**
+     * Formats all permission groups in a shape that is readable
+     * for a muliselect form field
+     */
     getPermissionGroupItems(): any[] {
       return this.permissionGroups.map((group) => ({
         text: group.name,
         value: group.id
       }));
     },
+    /**
+     * Adds a new user to the inventory system.
+     */
     async addUser() {
       if (this.username && this.password) {
         const resp = await this.apiService.createUser(
