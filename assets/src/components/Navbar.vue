@@ -28,6 +28,7 @@ export default {
     let listItems = [
       {title: 'Dashboard', icon: 'mdi-home', redirect: '/dashboard'},
       {title: 'Tables', icon: 'mdi-table', redirect: '/tables'},
+      {title: 'Information', icon: 'mdi-info', redirect: '/information'}
     ];
 
     // If the user is an administrator he has acces to other routes.
