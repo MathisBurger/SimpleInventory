@@ -17,14 +17,19 @@
                 <v-list-item-title>Login</v-list-item-title>
             </v-list-item>
             <v-list-item
-                @click="() => logout()"
-            >
-                <v-list-item-title>Logout</v-list-item-title>
-            </v-list-item>
-            <v-list-item
                 @click="() => navigateToRoute('/glossary')"
             >
                 <v-list-item-title>Glossary</v-list-item-title>
+            </v-list-item>
+            <v-list-item
+                @click="() => navigateToRoute('/updates')"
+            >
+                <v-list-item-title>Updates</v-list-item-title>
+            </v-list-item>
+            <v-list-item
+                @click="() => logout()"
+            >
+                <v-list-item-title>Logout</v-list-item-title>
             </v-list-item>
         </v-list>
     </v-menu>

@@ -7,6 +7,8 @@ import PermissionGroups from "./pages/PermissionGroups.vue";
 import TablesList from "./pages/TablesList.vue";
 import TableView from "./pages/TableView.vue";
 import Glossary from "./pages/Glossary.vue";
+import Updates from "./pages/Updates.vue";
+import ServerInformation from "./pages/ServerInformation.vue";
 
 /**
  * The extended route type. 
@@ -60,6 +62,16 @@ const routes: ExpandedRoute[] = [
     {
         path: '/glossary',
         component: Glossary,
+        permissions: [PermissionLevels.ROLE_USER]
+    },
+    {
+        path: '/updates',
+        component: Updates,
+        permissions: [PermissionLevels.ROLE_USER]
+    },
+    {
+        path: '/information',
+        component: ServerInformation,
         permissions: [PermissionLevels.ROLE_USER]
     }
 ];
