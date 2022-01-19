@@ -20,6 +20,9 @@ final class Version20220102211951 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
+        $this->addSql('CREATE SEQUENCE "user_id_seq" INCREMENT BY 1 MINVALUE 1 START 1');
+        $this->addSql('CREATE TABLE "user" (id INT NOT NULL, roles JSON NOT NULL, username VARCHAR(255) NOT NULL, password VARCHAR(255) NOT NULL, token VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('ALTER TABLE "user" ALTER token DROP NOT NULL');
         $this->addSql('CREATE SEQUENCE permission_groups_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
         $this->addSql('CREATE SEQUENCE "table_id_seq" INCREMENT BY 1 MINVALUE 1 START 1');
         $this->addSql('CREATE SEQUENCE table_element_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
@@ -43,6 +46,11 @@ final class Version20220102211951 extends AbstractMigration
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
+        $this->addSql('CREATE SCHEMA public');
+        $this->addSql('DROP SEQUENCE "user_id_seq" CASCADE');
+        $this->addSql('DROP TABLE "user"');
+        $this->addSql('CREATE SCHEMA public');
+        $this->addSql('ALTER TABLE "user" ALTER token SET NOT NULL');
         $this->addSql('CREATE SCHEMA public');
         $this->addSql('ALTER TABLE table_permission_groups DROP CONSTRAINT FK_9D8897E52DC013A3');
         $this->addSql('ALTER TABLE user_permission_groups DROP CONSTRAINT FK_C1A825B02DC013A3');

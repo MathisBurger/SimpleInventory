@@ -1,28 +1,11 @@
 <template>
-  <v-card raised outlined width="256" class="centered-login">
-      <v-card-title>Login</v-card-title>
-      <v-card-text>
-        <v-text-field
-          label="Username"
-          :rules="rules"
-          hide-details="auto"
-          v-model="username"
-        />
-        <v-text-field
-          label="Password"
-          :rules="rules"
-          hide-details="auto"
-          type="password"
-          v-model="password"
-        />
-        <v-btn
-            color="primary"
-            depressed
-            style="margin-top: 10px"
-            @click="login"
-        >Login</v-btn>
-      </v-card-text>
-  </v-card>
+  <div class="centered-login">
+    <LoginComponent 
+      :username="username"
+      :password="password"
+      :login="login"
+    />
+  </div>
 </template>
 
 <script lang="ts">
@@ -30,17 +13,13 @@ import Vue from 'vue';
 import APIService from "../services/APIService";
 import {User} from "../../typings/User";
 import {StorageService} from "../services/storageService";
+import LoginComponent from '../components/LoginComponent.vue';
 
 export default Vue.extend({
+  components: { LoginComponent },
   name: "Login",
   data() {
       return {
-        /**
-         * Rules for the input fields
-         */
-        rules: [
-            (value: string) => !!value || 'Required.'
-        ],
         /**
          * The inserted username
          */
@@ -84,10 +63,10 @@ export default Vue.extend({
 </script>
 
 <style scoped>
-.centered-login {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
+  .centered-login {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
 </style>
