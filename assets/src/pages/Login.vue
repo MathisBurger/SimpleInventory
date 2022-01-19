@@ -42,9 +42,9 @@ export default Vue.extend({
     /**
      * Used for logging in a user with the provided credentials.
      */
-    async login() {
+    async login(username: string, password: string) {
       try {
-        const login = await this.apiService.login(this.username, this.password);
+        const login = await this.apiService.login(username, password);
         this.storage.setActiveUser(login as User);
         await this.$router.push('/dashboard');
       } catch (e) {

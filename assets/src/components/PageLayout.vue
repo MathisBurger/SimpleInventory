@@ -7,7 +7,9 @@
       <v-col md="10">
         <v-card raised outlined>
           <v-card-title>{{title}}</v-card-title>
-          <slot />
+          <div class="bottom-margin">
+            <slot />
+          </div>
         </v-card>
       </v-col>
     </v-row>
@@ -30,3 +32,9 @@ export default Vue.extend({
   components: {Navbar},
 });
 </script>
+
+<style scoped>
+  .bottom-margin {
+    margin-bottom: 20px;
+  }
+</style>

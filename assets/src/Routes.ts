@@ -9,6 +9,8 @@ import TableView from "./pages/TableView.vue";
 import Glossary from "./pages/Glossary.vue";
 import Updates from "./pages/Updates.vue";
 import ServerInformation from "./pages/ServerInformation.vue";
+import Storage from "./pages/Storage.vue";
+import PongGame from "./pages/PongGame.vue";
 
 /**
  * The extended route type. 
@@ -72,6 +74,16 @@ const routes: ExpandedRoute[] = [
     {
         path: '/information',
         component: ServerInformation,
+        permissions: [PermissionLevels.ROLE_USER]
+    },
+    {
+        path: '/storage',
+        component: Storage,
+        permissions: [PermissionLevels.ROLE_USER]
+    },
+    {
+        path: '/pong-game',
+        component: PongGame,
         permissions: [PermissionLevels.ROLE_USER]
     }
 ];

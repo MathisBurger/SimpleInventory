@@ -19,7 +19,7 @@
             color="primary"
             depressed
             style="margin-top: 10px"
-            @click="login"
+            @click="() => login(username, password)"
         >Login</v-btn>
       </v-card-text>
   </v-card>
@@ -38,17 +38,17 @@ export default Vue.extend({
               rules: [
                   (value: string) => !!value || 'Required.'
               ],
+              /**
+               * The username the user inserted
+               */
+              username: '',
+              /**
+               * The password, the user inserted
+               */
+              password: '',
         }
     },
     props: {
-        /**
-         * The username the user inserted
-         */
-        username: String,
-        /**
-         * The password, the user inserted
-         */
-        password: String,
         /**
          * The function that is executed on login
          */
